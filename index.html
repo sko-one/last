@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sanya Ko Operations</title>
+<meta name="description" content="Sanya Ko Operations — architecture, graphic and web design. Sofia and Varna, Bulgaria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300..800&family=Sofia+Sans+Extra+Condensed:wght@500..800&display=swap" rel="stylesheet">
+<script>
+  // Apply saved theme before paint to avoid a flash
+  try { const t = localStorage.getItem("sko-theme"); if (t) document.documentElement.dataset.theme = t; } catch(e){}
+</script>
+<style>
+:root{
+  --paper:#ffffff;
+  --ink:#000000;
+  --muted:#7c7c7c;
+  --line:#e2e2e2;
+  --concrete:#e9e7e3;
+  --concrete-line:#d8d5cf;
+  --pattern:#cfcfcf;
+  /* Sofia Sans: Bulgarian Cyrillic letterforms by default, same family for Latin */
+  --font:"Sofia Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display:"Sofia Sans Extra Condensed", "Sofia Sans", "Arial Narrow", sans-serif;
+  --pad:clamp(20px,4vw,56px);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121212; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2c2c2c;
+    --concrete:#1d1d1c; --concrete-line:#2b2a28; --pattern:#3a3a3a; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121212; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2c2c2c;
+  --concrete:#1d1d1c; --concrete-line:#2b2a28; --pattern:#3a3a3a; color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color .25s ease,color .25s ease}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* Header */
+.site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--paper);border-bottom:1px solid var(--line);transition:background-color .25s ease}
+.bar{display:flex;align-items:center;gap:24px;padding:16px var(--pad)}
+.brand{display:flex;align-items:center;gap:14px;margin-right:auto}
+.brand-mark{display:block;line-height:0}
+.brand-mark svg{width:52px;height:52px;display:block}
+.brand-name{font-size:14px;color:var(--muted)}
+.nav{display:flex;gap:28px;font-size:15px}
+.nav a{position:relative;padding:4px 0}
+.nav a[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--ink)}
+.nav a:hover{color:var(--muted)}
+.tools{display:flex;align-items:center;gap:6px;padding-left:20px;border-left:1px solid var(--line)}
+.tool{display:inline-grid;place-items:center;min-width:36px;height:36px;padding:0 8px;background:none;border:1px solid transparent;border-radius:999px;color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.tool:hover{border-color:var(--line)}
+.tool svg{width:18px;height:18px}
+.menu-btn{display:none;background:none;border:0;color:var(--ink);font:inherit;font-size:15px;cursor:pointer;padding:6px 0}
+
+@media (max-width:379px){.brand-name{display:none}}
+@media (max-width:860px){
+  .brand{gap:10px}
+  .menu-btn{display:block}
+  .tools{border-left:0;padding-left:0;gap:2px}
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:var(--paper);border-bottom:1px solid var(--line);padding:8px var(--pad) 16px}
+  .nav.open{display:flex}
+  .nav a{padding:12px 0;font-size:20px}
+  .nav a[aria-current="page"]::after{display:none}
+  .nav a[aria-current="page"]{font-weight:700}
+}
+
+main{padding:0 var(--pad);min-height:60vh}
+
+/* Page heading */
+.page-head{padding:clamp(40px,8vw,96px) 0 clamp(24px,4vw,40px);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.page-title{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(52px,11vw,168px);line-height:.86;letter-spacing:-.025em;overflow-wrap:anywhere}
+/* Home page: the large logo replaces the "Projects" heading */
+.page-logo{margin:0;line-height:0}
+.page-logo svg{width:clamp(120px,15vw,210px);height:auto;display:block}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* Home page header: the studio name instead of the small logo */
+/* Home page: the small logo keeps its place but stays hidden, so the name never moves between pages */
+body[data-page="home"] .brand-mark{visibility:hidden}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{font:inherit;font-size:14px;background:none;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.filters button[aria-pressed="true"]{color:var(--paper);background:var(--ink);border-color:var(--ink)}
+.filters button:hover{color:var(--ink);border-color:var(--ink)}
+.filters button[aria-pressed="true"]:hover{color:var(--paper)}
+
+/* Project grid */
+.grid{list-style:none;margin:0;padding:0 0 clamp(48px,8vw,96px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(28px,3vw,44px) clamp(16px,2vw,28px)}
+@media (min-width:1200px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.card a{display:block}
+.thumb{aspect-ratio:1/1;overflow:hidden;background:var(--concrete);position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.card a:hover .thumb img{transform:scale(1.03)}
+.card h2{margin:14px 0 2px;font-size:19px;font-weight:600;letter-spacing:-.005em}
+.cats{font-size:14px;color:var(--muted)}
+
+/* Placeholder until a real photo is added */
+.ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:16px;
+  background-color:var(--concrete);
+  background-image:
+    linear-gradient(var(--concrete-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--concrete-line) 1px,transparent 1px);
+  background-size:32px 32px;background-position:-1px -1px}
+.ph span{font-weight:800;font-size:clamp(28px,4vw,44px);line-height:.9;letter-spacing:-.02em;color:var(--concrete-line)}
+
+/* Project page */
+.project{padding:clamp(32px,6vw,72px) 0 clamp(48px,8vw,96px)}
+.project-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 48px;align-items:end;margin-bottom:clamp(24px,4vw,40px)}
+@media (max-width:760px){.project-head{grid-template-columns:1fr}}
+.project-head .page-title{font-size:clamp(48px,9vw,128px)}
+.subtitle{margin:clamp(12px,1.6vw,20px) 0 0;font-size:clamp(20px,2vw,26px);line-height:1.25;color:var(--muted)}
+.head-side{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px}
+/* Link to a live website, next to the project facts */
+.visit{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border:1px solid var(--ink);border-radius:999px;font-size:15px;font-weight:500;line-height:1;white-space:nowrap;transition:background-color .2s ease,color .2s ease}
+.visit span{color:var(--muted);font-weight:400;transition:color .2s ease}
+.visit svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s ease}
+.visit:hover{background:var(--ink);color:var(--paper)}
+.visit:hover span{color:var(--paper);opacity:.7}
+.visit:hover svg{transform:translate(2px,-2px)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 24px;font-size:15px;margin:0}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0}
+/* Cover runs edge to edge */
+.hero{aspect-ratio:16/9;max-height:88vh;width:auto;margin:0 calc(var(--pad) * -1);background:var(--concrete);position:relative;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover}
+/* Square or portrait covers: shown whole, left-aligned, as tall as the screen allows */
+.hero.fit{aspect-ratio:auto;max-height:none;margin:0;background:none;overflow:visible}
+.hero.fit img{width:auto;height:auto;max-width:100%;max-height:88vh;margin:0}
+.prose{max-width:62ch;font-size:18px;line-height:1.65}
+.prose p{margin:0 0 1em}
+.prose a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.prose a:hover{color:var(--muted)}
+.prose p:last-child{margin-bottom:0}
+
+/* Asymmetric rhythm: a strict 6-column grid, images cycle through five placements */
+.rhythm{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));column-gap:clamp(12px,2vw,28px);row-gap:clamp(28px,5vw,80px);margin-top:clamp(40px,7vw,104px);align-items:start}
+.rhythm .r-text{grid-column:2/6;font-size:clamp(18px,1.7vw,22px);line-height:1.55}
+.rhythm figure{margin:0}
+.rhythm img{width:100%;height:auto;display:block}
+.rhythm .s0{grid-column:1/5}
+.rhythm .s1{grid-column:3/7}
+.rhythm .s2{grid-column:1/4}
+.rhythm .s3{grid-column:4/7;margin-top:clamp(48px,10vw,160px)}
+.rhythm .s4{grid-column:2/7}
+.rhythm .wide{grid-column:1/-1}
+/* Film strip: horizontal row of large images, scroll or drag sideways */
+.strip-text{margin-top:clamp(40px,7vw,104px);font-size:clamp(18px,1.7vw,22px);line-height:1.55}
+.strip-wrap{margin:clamp(40px,6vw,80px) calc(var(--pad) * -1) 0}
+.strip{display:flex;gap:clamp(12px,1.6vw,24px);overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--pad);scroll-padding:0 var(--pad);scrollbar-width:none;cursor:grab;overscroll-behavior-x:contain}
+.strip::-webkit-scrollbar{display:none}
+.strip.dragging{cursor:grabbing;scroll-snap-type:none}
+.strip figure{flex:none;margin:0;scroll-snap-align:start;height:clamp(280px,64vh,760px)}
+.strip figure:last-child{margin-right:var(--pad)}
+.strip.framed img{outline:1px solid var(--line);outline-offset:-1px}
+.strip img{height:100%;width:auto;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.strip-bar{display:flex;align-items:center;gap:16px;padding:18px var(--pad) 0;font-size:14px;color:var(--muted)}
+.strip-bar button{background:none;border:0;padding:6px;color:var(--ink);cursor:pointer;line-height:0}
+.strip-bar button:disabled{color:var(--line);cursor:default}
+.strip-bar svg{width:44px;height:16px;overflow:visible}
+.strip-bar svg path{stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.strip-count{font-variant-numeric:tabular-nums;margin-left:auto}
+@media (max-width:700px){
+  .strip figure{height:auto;width:86vw}
+  .strip img{width:100%;height:auto}
+}
+@media (max-width:700px){
+  .rhythm{grid-template-columns:1fr}
+  .rhythm.rhythm > *{grid-column:1/-1;margin-top:0}
+  .rhythm.rhythm > .s1,.rhythm.rhythm > .s3{width:84%;justify-self:end}
+  .rhythm.rhythm > .s2{width:84%}
+}
+@media (max-width:560px){.gallery{grid-template-columns:1fr}}
+.pager{border-top:1px solid var(--line);margin-top:clamp(40px,6vw,72px);padding-top:clamp(28px,5vw,64px);display:grid;gap:clamp(28px,5vw,64px)}
+.pg{--fs:clamp(52px,10.5vw,170px);--sw:clamp(5px,.75vw,12px);--h:calc(var(--fs)*.62);display:flex;align-items:flex-start;gap:clamp(16px,3vw,48px);color:var(--ink)}
+.pg-word{display:flex;flex-direction:column;flex:none}
+.pg-next .pg-word{align-items:flex-start}
+.pg-prev .pg-word{align-items:flex-end;text-align:right}
+.pg-word b{font-family:var(--display);font-weight:800;font-size:var(--fs);line-height:.74;letter-spacing:-.01em;text-transform:uppercase}
+.pg-word small{margin-top:clamp(10px,1.4vw,18px);font-size:clamp(15px,1.4vw,19px);color:var(--muted)}
+.arrow{flex:1;min-width:48px;height:calc(var(--fs)*.74);display:flex;align-items:center;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.arrow i{flex:1;height:var(--sw);background:currentColor;border-radius:999px}
+.arrow svg{flex:none;height:var(--h);width:calc(var(--h)/2);overflow:visible}
+.arrow svg path{stroke:currentColor;stroke-width:var(--sw);stroke-linecap:round;stroke-linejoin:round;fill:none}
+.arrow.left i{margin-left:calc(var(--h)/-2)}
+.arrow.right i{margin-right:calc(var(--h)/-2)}
+.pg-prev:hover .arrow{transform:translateX(-14px)}
+.pg-next:hover .arrow{transform:translateX(14px)}
+.pg:hover .pg-word small{color:var(--ink)}
+
+/* About */
+.about{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,72px);padding-bottom:clamp(48px,8vw,96px)}
+@media (max-width:860px){.about{grid-template-columns:1fr}}
+.about .portrait{aspect-ratio:4/5;align-self:start;background:var(--concrete);position:relative;overflow:hidden}
+.about .portrait img{width:100%;height:100%;object-fit:cover}
+.about .prose{margin:0}
+.about .prose p:first-child{font-size:22px;line-height:1.45}
+
+/* Contacts */
+.contacts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);padding-bottom:clamp(48px,8vw,96px)}
+@media (max-width:760px){.contacts{grid-template-columns:1fr}}
+.contact-big a{display:block;font-weight:600;font-size:clamp(28px,4.4vw,56px);line-height:1.1;letter-spacing:-.015em;border-bottom:1px solid var(--line);padding:14px 0;overflow-wrap:anywhere}
+.contact-big a:hover{color:var(--muted)}
+.contact-list{list-style:none;padding:0;margin:0;font-size:18px}
+.contact-list li{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding:14px 0}
+.contact-list li > span:first-child{color:var(--muted)}
+.contact-list li{align-items:center}
+/* Social icons: single-colour masks, so they follow the text colour in light and dark mode */
+.social-icons{display:flex;gap:14px}
+.social-icons a{display:block;line-height:0;color:var(--ink)}
+.social-icons a:hover{color:var(--muted)}
+.social-icons i{display:block;width:30px;height:30px;background-color:currentColor;-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat;transition:background-color .2s ease}
+
+.empty{color:var(--muted);padding:40px 0 96px;font-size:18px}
+
+/* Footer */
+.site-footer{position:relative;overflow:hidden;border-top:1px solid var(--line);padding:clamp(40px,6vw,72px) var(--pad) clamp(32px,4vw,48px)}
+/* Footer background: the logo's dash grid, with whole dashes left out around the text, as the logo does around "SKO" */
+.foot-pattern{position:absolute;inset:0;width:100%;height:100%;color:var(--pattern);pointer-events:none}
+.foot-cols,.copy{position:relative}
+.foot-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;font-size:15px}
+@media (max-width:760px){.foot-cols{grid-template-columns:1fr 1fr}}
+.foot-cols h3{font-size:13px;font-weight:500;color:var(--muted);margin:0 0 10px}
+.foot-cols p,.foot-cols ul{margin:0;padding:0;list-style:none}
+.foot-cols li{margin-bottom:4px}
+.foot-cols a:hover{color:var(--muted)}
+.copy{margin-top:32px;font-size:13px;color:var(--muted)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="#/" id="brandLink">
+      <span class="brand-mark" id="brandMark"></span>
+      <span class="brand-name" id="brandName"></span>
+    </a>
+    <nav class="nav" id="nav"></nav>
+    <div class="tools">
+      <button class="tool" id="langBtn" type="button"></button>
+      <button class="tool" id="themeBtn" type="button"></button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="nav"></button>
+    </div>
+  </div>
+</header>
+
+<main id="app" tabindex="-1"></main>
+
+<footer class="site-footer">
+  <svg class="foot-pattern" id="footPattern" aria-hidden="true"></svg>
+  <div class="foot-cols">
+    <div><h3 id="hLocation"></h3><p id="footLocation"></p></div>
+    <div><h3 id="hPages"></h3><ul id="footPages"></ul></div>
+    <div><h3 id="hFollow"></h3><ul id="footSocial"></ul></div>
+  </div>
+  <p class="copy" id="copy"></p>
+</footer>
+
+<script>
+/* =========================================================
+   SITE CONTENT — everything editable lives in this object.
+   Text with two languages is written as { en: "...", bg: "..." }.
+   Images: a path inside the images/ folder, e.g. "images/rktn-house/03.jpg" (or "" for the placeholder).
+   coverFit: "contain" shows a square/portrait cover whole instead of cropping it wide.
+   frame: true adds a thin outline to gallery images (useful for white website screenshots).
+   thumb = square image for the project grid (optional, falls back to cover).
+   Description links: write [text](https://…).
+   gallery images follow the asymmetric rhythm; add wide: true to make one span the full width.
+   ========================================================= */
+const SITE = {
+  name: "Sanya Ko Operations",
+  copyright: "© 2024 SKO",
+
+  // Default layout of project pages: "rhythm" (asymmetric grid) or "strip" (horizontal film strip).
+  // A project can override it with its own layout: "...".
+  projectLayout: "strip",
+
+  nav: [
+    { route: "about",          label: { en: "About",          bg: "За нас" } },
+    { route: "architecture",   label: { en: "Architecture",   bg: "Архитектура" } },
+    { route: "design",         label: { en: "Design",         bg: "Дизайн" } },
+    { route: "contacts",       label: { en: "Contacts",       bg: "Контакти" } }
+  ],
+
+  // Category names (projects refer to them by the English key)
+  categories: {
+    "Architecture":   { en: "Architecture",   bg: "Архитектура" },
+    "Graphic Design": { en: "Graphic Design", bg: "Графичен дизайн" },
+    "Web Design":     { en: "Web Design",     bg: "Уеб дизайн" },
+    "Product Design": { en: "Product Design", bg: "Продуктов дизайн" },
+    "Landscape":      { en: "Landscape",      bg: "Ландшафт" }
+  },
+
+  // Which categories each section page shows (filters appear only for categories that have projects)
+  sections: {
+    "architecture":   ["Architecture", "Landscape"],
+    "design":         ["Graphic Design", "Web Design", "Product Design"]
+  },
+
+  location: {
+    en: ["Sofia, 171, Tsar Boris III Blvd", "Varna", "Bulgaria"],
+    bg: ["София, бул. „Цар Борис III“ 171", "Варна", "България"]
+  },
+
+  social: [
+    { label: "Facebook", icon: "images/icons/facebook.png",  url: "https://www.facebook.com/profile.php?id=61570025671797" },
+    { label: "Instagram", icon: "images/icons/instagram.png", url: "https://www.instagram.com/sko.oone/" },
+    { label: "LinkedIn", icon: "images/icons/linkedin.png",  url: "https://www.linkedin.com/in/sanyakovacheva" }
+  ],
+
+  contacts: {
+    email: "info@sko.one",
+    phone: "+359 88 7146 879",
+    address: { en: "171, Tsar Boris III Blvd, Sofia", bg: "бул. „Цар Борис III“ 171, София" }
+  },
+
+  about: {
+    portrait: "images/about/portrait.jpg",
+    paragraphs: {
+      en: [
+        "Sanya Kovacheva is an architect and the founder of SKO (Sanya Ko Operations). She established the studio in 2018 upon returning to Bulgaria, building on the technological infrastructure and outdoor advertising expertise of her father’s company, MIM Studio. The practice initially launched with experimental projects focusing on laser cutting and engraving.",
+        "Sanya’s academic background spans architectural studies at VFU (Varna), IUAV (Venice), and POLIMI (Milan). Her early practical experience was shaped by her involvement with the Amorpha Youth Foundation from its very inception. As a student, she also participated in exhibitions and workshops at the Venice Architecture Biennale in 2012 and 2016. From 2019 to 2024, Sanya worked as a senior architect at STARH architectural studio, where she gained extensive technical and large-scale project management experience. The projects she contributed to have received widespread international acclaim, earning numerous prestigious awards, including: Building of the Year (2023), World Architecture Festival (2023), Arch Design Award (2024), Architizer A+Awards (2024), Architecture MasterPrize (2024, 2025), ArchDaily Building of the Year (2025).",
+        "Between 2025 and 2026, she served as a lead architect within Glavbolgarstroy, overseeing the temporary settlement and supporting infrastructure for Units 7 and 8 of the Kozloduy NPP — one of the most significant energy infrastructure developments in Bulgaria over the last forty years.",
+        "Driven by a multidisciplinary approach, Sanya currently leads SKO at the intersection of investment design, product design, and visual identity.",
+        "Beyond her practice, Sanya is a co-founder of Amorpha (2009) and the Amorpha Youth Foundation (2016), and continues to serve as a member of the Foundation Board."
+      ],
+      bg: [
+        "Саня Ковачева е архитект и основател на студио SKO (Sanya Ko Operations). Основите на практиката са положени през 2018 г., когато Саня се завръща в България и наследява технологичната база и опита в сферата на външната реклама от дейността на баща си, MIM Studio, започвайки с експериментални проекти в областта на лазерното рязане и гравиране.",
+        "Академичният ѝ профил включва обучение във ВСУ (Варна), IUAV (Венеция) и POLIMI (Милано), а ранният ѝ практически опит се оформя в Младежка фондация „Аморфа“ още от създаването ѝ. Като студент участва в изложби и работилници на Венецианското архитектурно биенале (2012, 2016). Професионалният ѝ път преминава през архитектурно студио STARH (2019–2024), където натрупва мащабен технически и проектантски опит. Проектите, върху които работи, са носители на наградите „Сграда на годината“ (2023), World Architecture Festival (2023), Arch Design Award (2024), Architizer A+Awards (2024), Architecture MasterPrize (2024, 2025), ArchDaily Building of the Year (2025). В периода 2025–2026 г. тя е водещ архитект към структурата на Главболгарстрой, отговаряйки за временното селище и поддържащата инфраструктура за блокове 7 и 8 на АЕЦ „Козлодуй“ – един от най-значимите енергийни обекти в България за последните четири десетилетия.",
+        "Водена от мултидисциплинарен подход, днес Саня развива SKO като пресечна точка между инвестиционното проектиране, продуктовия дизайн и визуалната идентичност.",
+        "Саня Ковачева е съосновател на „Аморфа“ (2009) и Младежка фондация „Аморфа“ (2016) и член на Съвета на фондацията."
+      ]
+    }
+  },
+
+  // Projects appear on the home page in this order (top = first).
+  // description: { en: [paragraphs], bg: [paragraphs] }
+  projects: [
+    { slug: "sko-office",     title: "SKO Office",     categories: ["Architecture"],                   year: "", location: "",
+      thumb: "images/sko-office/thumb.jpg",
+      cover: "images/sko-office/cover.jpg",
+      subtitle: { en: "Low Budget Rental: Office & Showroom", bg: "Нискобюджетно помещение под наем: офис и шоурум" },
+      description: {
+        en: ["This is the concept for our new creative hub — a hybrid space serving as both the SKO architectural office and the КРЪГЧЕ showroom.", "The challenge: a rental space, a very tight budget, and a 100% DIY execution. These renders map out how we maximized every square meter before picking up the tools."],
+        bg: ["Това е концепцията за нашето ново творческо пространство – хибридно място, което е едновременно архитектурният офис на SKO и шоурумът на КРЪГЧЕ.", "Предизвикателството: помещение под наем, много ограничен бюджет и изцяло самостоятелно изпълнение. Тези визуализации показват как оползотворихме всеки квадратен метър, преди да хванем инструментите."]
+      },
+      gallery: [
+        { src: "images/sko-office/01.jpg" },
+        { src: "images/sko-office/02.jpg" }
+      ] },
+    { slug: "sue-venir",      title: "SUE-VENIR",      categories: ["Architecture", "Graphic Design"], year: "", location: "", cover: "",
+      thumb: "images/sue-venir/thumb.jpg",
+      description: {
+        en: ["A competition entry for a new Klek Shop souvenir, in the open call launched by [@dot__sofia](https://www.instagram.com/dot__sofia/) and [@studiokomplekt](https://www.instagram.com/studiokomplekt/). Designed in collaboration by [@sko.oone](https://www.instagram.com/sko.oone/) and [@_kragche](https://www.instagram.com/_kragche/)."],
+        bg: ["Кандидатура в конкурса за нов сувенир за Klek Shop на [@dot__sofia](https://www.instagram.com/dot__sofia/) и [@studiokomplekt](https://www.instagram.com/studiokomplekt/). Колаборация на [@sko.oone](https://www.instagram.com/sko.oone/) и [@_kragche](https://www.instagram.com/_kragche/)."]
+      },
+      gallery: [
+        "images/sue-venir/01.jpg",
+        "images/sue-venir/02.jpg",
+        "images/sue-venir/03.jpg",
+        "images/sue-venir/04.jpg",
+        "images/sue-venir/05.jpg",
+        "images/sue-venir/06.jpg",
+        "images/sue-venir/07.jpg",
+        "images/sue-venir/08.jpg",
+        "images/sue-venir/09.jpg",
+        "images/sue-venir/10.jpg"
+      ] },
+    { slug: "rktn-house",     title: "RKTN HOUSE",     categories: ["Architecture"],                   year: "", location: { en: "Varna", bg: "Варна" },
+      coverFit: "contain",   // show the whole (square) cover instead of a wide crop
+      cover: "images/rktn-house/cover.jpg",
+      thumb: "images/rktn-house/thumb.jpg",
+      description: {
+        en: ["A two-storey house on the outskirts of Varna. The upper floor holds two bedrooms, each with its own bathroom, while the ground floor opens up into a large open-plan living room and kitchen.", "The house was designed as a weekend getaway for now, and as a permanent home in the future."],
+        bg: ["Двуетажна къща в околностите на Варна. На втория етаж са разположени две спални, всяка със собствена баня, а на първия – просторна дневна и кухня в общо отворено пространство.", "Къщата е проектирана като място за почивка през уикендите, а в бъдеще – и като постоянен дом."]
+      },
+      gallery: [
+        "images/rktn-house/01.jpg",
+        "images/rktn-house/02.jpg",
+        "images/rktn-house/03.jpg",
+        "images/rktn-house/04.jpg",
+        "images/rktn-house/05.jpg",
+        "images/rktn-house/06.jpg",
+        "images/rktn-house/07.jpg",
+        "images/rktn-house/08.jpg",
+        "images/rktn-house/09.jpg",
+        "images/rktn-house/10.jpg"
+      ] },
+    { slug: "kragche-store",  title: "kragche.store",  categories: ["Web Design"],                     year: "", location: "", cover: "", link: "https://kragche.store", frame: true,   // thin outline around white screenshots
+     
+      thumb: "images/kragche-store/thumb.jpg",
+      description: {en:[],bg:[]},
+      gallery: [
+        "images/kragche-store/01.jpg",
+        "images/kragche-store/02.jpg",
+        "images/kragche-store/03.jpg"
+      ] },
+    { slug: "logo-set",       title: "Logo Set",       categories: ["Graphic Design"],                 year: "2010–2024", location: "",
+      coverFit: "contain",
+      cover: "images/logo-set/cover.jpg",
+      thumb: "images/logo-set/thumb.jpg",
+      description: {
+        en: ["A set of logo designs and redesigns created between 2010 and 2024 for various brands and personal projects."],
+        bg: ["Серия от лога и редизайни, създадени между 2010 и 2024 г. за различни брандове и лични проекти."]
+      },
+      gallery: [] },
+    { slug: "mn50",           title: "MN50",           categories: ["Architecture", "Graphic Design"], year: "", location: { en: "Mantua, Italy", bg: "Мантуа, Италия" }, cover: "", frame: true,
+      thumb: "images/mn50/thumb.jpg",
+      description: {
+        en: ["Mantova 2050: Reidentifying the Industrial Heritage Sites: The Engine for the Historical City’s Future Landscape, or MN50, is an MSc thesis by Sanya Kovacheva and Veronica Rigonat at the Polytechnic University of Milan, in the Urban Design and History programme, supervised by Prof. Alessandro Balducci and Assist. Prof. Chiara Geroldi."],
+        bg: ["Mantova 2050: Reidentifying the Industrial Heritage Sites: The Engine for the Historical City’s Future Landscape, или MN50, е магистърска теза на Саня Ковачева и Вероника Ригонат в Миланския политехнически университет (Politecnico di Milano), програма „Градски дизайн и история“, с научни ръководители проф. Алесандро Балдучи и гл. ас. Киара Джеролди."]
+      },
+      gallery: [
+        "images/mn50/01.jpg",
+        "images/mn50/02.jpg",
+        "images/mn50/03.jpg",
+        "images/mn50/04.jpg",
+        "images/mn50/05.jpg",
+        "images/mn50/06.jpg"
+      ] },
+    { slug: "amorpha-org",    title: "amorpha.org",    categories: ["Web Design"],                     year: "", location: "", cover: "", description: {en:[],bg:[]}, gallery: [], link: "https://amorpha.org" },
+    { slug: "vfu-green-park", title: "VFU Green Park", categories: ["Architecture", "Landscape"],       year: "", location: "", cover: "", description: {en:[],bg:[]}, gallery: [] }
+  ]
+};
+
+/* SKO logo, vectorized; uses currentColor so it follows light/dark mode */
+const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 635 635"><path d="M4.2 23.8l19.6-19.6M44.7 23.8l19.6-19.6M85.1 23.8l19.6-19.6M125.6 23.8l19.6-19.6M166.1 23.8l19.6-19.6M206.5 23.8l19.6-19.6M247.0 23.8l19.6-19.6M287.5 23.8l19.6-19.6M328.0 23.8l19.6-19.6M368.4 23.8l19.6-19.6M408.9 23.8l19.6-19.6M449.4 23.8l19.6-19.6M489.8 23.8l19.6-19.6M530.3 23.8l19.6-19.6M570.8 23.8l19.6-19.6M611.2 23.8l19.6-19.6M4.2 64.3l19.6-19.6M44.7 64.3l19.6-19.6M85.1 64.3l19.6-19.6M125.6 64.3l19.6-19.6M166.1 64.3l19.6-19.6M206.5 64.3l19.6-19.6M247.0 64.3l19.6-19.6M287.5 64.3l19.6-19.6M328.0 64.3l19.6-19.6M368.4 64.3l19.6-19.6M408.9 64.3l19.6-19.6M449.4 64.3l19.6-19.6M489.8 64.3l19.6-19.6M530.3 64.3l19.6-19.6M570.8 64.3l19.6-19.6M611.2 64.3l19.6-19.6M4.2 104.7l19.6-19.6M44.7 104.7l19.6-19.6M85.1 104.7l19.6-19.6M125.6 104.7l19.6-19.6M166.1 104.7l19.6-19.6M206.5 104.7l19.6-19.6M247.0 104.7l19.6-19.6M287.5 104.7l19.6-19.6M328.0 104.7l19.6-19.6M368.4 104.7l19.6-19.6M408.9 104.7l19.6-19.6M449.4 104.7l19.6-19.6M489.8 104.7l19.6-19.6M530.3 104.7l19.6-19.6M570.8 104.7l19.6-19.6M611.2 104.7l19.6-19.6M4.2 145.2l19.6-19.6M44.7 145.2l19.6-19.6M85.1 145.2l19.6-19.6M125.6 145.2l19.6-19.6M166.1 145.2l19.6-19.6M206.5 145.2l19.6-19.6M247.0 145.2l19.6-19.6M287.5 145.2l19.6-19.6M328.0 145.2l19.6-19.6M368.4 145.2l19.6-19.6M408.9 145.2l19.6-19.6M449.4 145.2l19.6-19.6M489.8 145.2l19.6-19.6M530.3 145.2l19.6-19.6M570.8 145.2l19.6-19.6M611.2 145.2l19.6-19.6M4.2 185.7l19.6-19.6M44.7 185.7l19.6-19.6M85.1 185.7l19.6-19.6M125.6 185.7l19.6-19.6M166.1 185.7l19.6-19.6M206.5 185.7l19.6-19.6M247.0 185.7l19.6-19.6M287.5 185.7l19.6-19.6M328.0 185.7l19.6-19.6M368.4 185.7l19.6-19.6M408.9 185.7l19.6-19.6M449.4 185.7l19.6-19.6M489.8 185.7l19.6-19.6M530.3 185.7l19.6-19.6M570.8 185.7l19.6-19.6M611.2 185.7l19.6-19.6M4.2 226.2l19.6-19.6M44.7 226.2l19.6-19.6M85.1 226.2l19.6-19.6M125.6 226.2l19.6-19.6M166.1 226.2l19.6-19.6M206.5 226.2l19.6-19.6M247.0 226.2l19.6-19.6M287.5 226.2l19.6-19.6M328.0 226.2l19.6-19.6M368.4 226.2l19.6-19.6M408.9 226.2l19.6-19.6M449.4 226.2l19.6-19.6M489.8 226.2l19.6-19.6M530.3 226.2l19.6-19.6M570.8 226.2l19.6-19.6M611.2 226.2l19.6-19.6M4.2 266.6l19.6-19.6M44.7 266.6l19.6-19.6M85.1 266.6l19.6-19.6M125.6 266.6l19.6-19.6M166.1 266.6l19.6-19.6M206.5 266.6l19.6-19.6M247.0 266.6l19.6-19.6M287.5 266.6l19.6-19.6M328.0 266.6l19.6-19.6M368.4 266.6l19.6-19.6M408.9 266.6l19.6-19.6M449.4 266.6l19.6-19.6M489.8 266.6l19.6-19.6M530.3 266.6l19.6-19.6M570.8 266.6l19.6-19.6M611.2 266.6l19.6-19.6M4.2 307.1l19.6-19.6M44.7 307.1l19.6-19.6M85.1 307.1l19.6-19.6M125.6 307.1l19.6-19.6M166.1 307.1l19.6-19.6M206.5 307.1l19.6-19.6M247.0 307.1l19.6-19.6M287.5 307.1l19.6-19.6M328.0 307.1l19.6-19.6M368.4 307.1l19.6-19.6M408.9 307.1l19.6-19.6M449.4 307.1l19.6-19.6M489.8 307.1l19.6-19.6M530.3 307.1l19.6-19.6M570.8 307.1l19.6-19.6M611.2 307.1l19.6-19.6M4.2 347.6l19.6-19.6M44.7 347.6l19.6-19.6M85.1 347.6l19.6-19.6M125.6 347.6l19.6-19.6M166.1 347.6l19.6-19.6M206.5 347.6l19.6-19.6M247.0 347.6l19.6-19.6M287.5 347.6l19.6-19.6M328.0 347.6l19.6-19.6M368.4 347.6l19.6-19.6M408.9 347.6l19.6-19.6M449.4 347.6l19.6-19.6M489.8 347.6l19.6-19.6M530.3 347.6l19.6-19.6M570.8 347.6l19.6-19.6M611.2 347.6l19.6-19.6M4.2 388.0l19.6-19.6M44.7 388.0l19.6-19.6M85.1 388.0l19.6-19.6M125.6 388.0l19.6-19.6M166.1 388.0l19.6-19.6M206.5 388.0l19.6-19.6M247.0 388.0l19.6-19.6M287.5 388.0l19.6-19.6M328.0 388.0l19.6-19.6M368.4 388.0l19.6-19.6M408.9 388.0l19.6-19.6M449.4 388.0l19.6-19.6M489.8 388.0l19.6-19.6M530.3 388.0l19.6-19.6M570.8 388.0l19.6-19.6M611.2 388.0l19.6-19.6M4.2 428.5l19.6-19.6M44.7 428.5l19.6-19.6M85.1 428.5l19.6-19.6M125.6 428.5l19.6-19.6M166.1 428.5l19.6-19.6M206.5 428.5l19.6-19.6M247.0 428.5l19.6-19.6M287.5 428.5l19.6-19.6M328.0 428.5l19.6-19.6M368.4 428.5l19.6-19.6M408.9 428.5l19.6-19.6M449.4 428.5l19.6-19.6M489.8 428.5l19.6-19.6M530.3 428.5l19.6-19.6M570.8 428.5l19.6-19.6M611.2 428.5l19.6-19.6M4.2 469.0l19.6-19.6M44.7 469.0l19.6-19.6M328.0 469.0l19.6-19.6M368.4 469.0l19.6-19.6M408.9 469.0l19.6-19.6M449.4 469.0l19.6-19.6M489.8 469.0l19.6-19.6M530.3 469.0l19.6-19.6M570.8 469.0l19.6-19.6M611.2 469.0l19.6-19.6M4.2 509.4l19.6-19.6M44.7 509.4l19.6-19.6M328.0 509.4l19.6-19.6M368.4 509.4l19.6-19.6M408.9 509.4l19.6-19.6M449.4 509.4l19.6-19.6M489.8 509.4l19.6-19.6M530.3 509.4l19.6-19.6M570.8 509.4l19.6-19.6M611.2 509.4l19.6-19.6M4.2 549.9l19.6-19.6M44.7 549.9l19.6-19.6M328.0 549.9l19.6-19.6M368.4 549.9l19.6-19.6M408.9 549.9l19.6-19.6M449.4 549.9l19.6-19.6M489.8 549.9l19.6-19.6M530.3 549.9l19.6-19.6M570.8 549.9l19.6-19.6M611.2 549.9l19.6-19.6M4.2 590.4l19.6-19.6M44.7 590.4l19.6-19.6M85.1 590.4l19.6-19.6M125.6 590.4l19.6-19.6M166.1 590.4l19.6-19.6M206.5 590.4l19.6-19.6M247.0 590.4l19.6-19.6M287.5 590.4l19.6-19.6M328.0 590.4l19.6-19.6M368.4 590.4l19.6-19.6M408.9 590.4l19.6-19.6M449.4 590.4l19.6-19.6M489.8 590.4l19.6-19.6M530.3 590.4l19.6-19.6M570.8 590.4l19.6-19.6M611.2 590.4l19.6-19.6M4.2 630.8l19.6-19.6M44.7 630.8l19.6-19.6M85.1 630.8l19.6-19.6M125.6 630.8l19.6-19.6M166.1 630.8l19.6-19.6M206.5 630.8l19.6-19.6M247.0 630.8l19.6-19.6M287.5 630.8l19.6-19.6M328.0 630.8l19.6-19.6M368.4 630.8l19.6-19.6M408.9 630.8l19.6-19.6M449.4 630.8l19.6-19.6M489.8 630.8l19.6-19.6M530.3 630.8l19.6-19.6M570.8 630.8l19.6-19.6M611.2 630.8l19.6-19.6" fill="none" stroke="currentColor" stroke-width="8.4" stroke-linecap="round"/><path d="M266.8 446.5 L259.2 448.5 L253.5 451.5 L251.0 453.5 L247.8 457.0 L245.0 461.2 L243.0 466.8 L241.8 475.5 L242.0 528.2 L243.0 533.5 L246.2 541.0 L248.0 543.5 L251.8 547.2 L254.5 549.2 L261.2 552.2 L268.2 553.8 L278.0 554.0 L284.0 553.2 L292.2 550.5 L298.0 546.8 L301.8 542.8 L303.8 539.8 L305.8 535.0 L306.8 531.2 L307.5 525.2 L307.5 474.8 L306.8 469.0 L304.8 462.5 L302.5 458.5 L297.0 452.5 L294.0 450.5 L290.2 448.8 L282.0 446.5ZM271.5 460.0 L279.5 460.2 L282.5 461.2 L286.0 463.2 L290.0 468.0 L291.0 470.5 L292.0 476.0 L292.0 524.2 L291.0 529.5 L288.8 534.0 L286.0 536.8 L281.5 539.2 L277.0 540.2 L271.8 540.2 L268.0 539.5 L265.5 538.5 L263.0 536.8 L260.8 534.5 L258.8 531.5 L257.2 525.0 L257.2 475.2 L257.8 471.8 L259.8 467.0 L263.5 463.0 L266.5 461.2ZM166.8 447.8 L165.2 450.2 L165.2 548.8 L166.0 550.5 L167.5 551.8 L169.8 552.8 L173.8 553.2 L178.0 552.2 L180.8 549.8 L180.8 517.8 L188.8 507.5 L190.5 506.0 L214.0 541.0 L220.2 551.0 L222.2 552.8 L224.5 553.5 L228.8 553.2 L231.2 552.0 L233.5 550.0 L234.8 547.8 L234.8 544.8 L233.8 542.5 L201.0 493.0 L201.5 491.2 L228.8 457.5 L229.8 455.8 L230.0 454.2 L229.8 452.2 L228.8 450.2 L227.0 448.5 L223.8 446.5 L219.5 446.2 L217.8 447.0 L215.2 449.8 L181.2 494.8 L180.8 494.2 L180.8 449.2 L179.2 447.5 L175.5 446.2 L169.2 446.5ZM117.0 445.8 L110.5 446.8 L104.5 448.5 L98.2 451.8 L92.8 457.0 L90.0 461.2 L88.0 468.2 L87.8 476.2 L88.2 480.8 L89.0 483.8 L91.0 488.0 L93.5 491.5 L96.5 494.5 L105.5 500.2 L120.2 506.2 L124.5 508.5 L128.8 511.2 L132.0 514.5 L135.0 520.2 L135.2 527.2 L134.0 531.8 L132.2 534.2 L128.5 537.5 L124.0 539.5 L119.8 540.2 L114.0 540.2 L109.2 539.5 L107.5 538.5 L106.5 538.5 L101.5 535.5 L95.0 529.5 L93.2 528.8 L90.5 528.8 L88.8 529.8 L86.0 533.0 L85.2 535.0 L85.2 538.8 L87.5 543.0 L90.8 546.2 L93.5 548.2 L99.5 551.2 L104.8 553.0 L110.2 554.0 L122.0 554.2 L128.5 553.2 L134.2 551.2 L140.0 548.0 L144.8 543.5 L146.8 540.8 L149.8 533.8 L150.8 528.5 L150.5 516.0 L149.8 512.5 L147.2 506.8 L144.8 503.0 L141.0 499.2 L136.2 495.8 L132.2 493.5 L131.5 493.5 L130.2 492.5 L129.5 492.5 L128.2 491.5 L125.0 490.5 L123.5 489.5 L122.5 489.5 L117.5 487.5 L111.0 484.2 L108.8 482.8 L105.0 479.0 L103.8 476.2 L103.2 473.5 L103.8 468.2 L104.8 466.0 L107.8 462.8 L111.8 460.5 L116.5 459.2 L124.5 459.0 L128.8 459.5 L136.0 462.2 L139.2 464.2 L144.2 464.2 L146.5 462.0 L147.8 459.5 L148.2 455.0 L146.8 452.2 L143.0 449.5 L137.5 447.5 L126.5 445.8Z" fill="currentColor" fill-rule="evenodd"/></svg>`;
+
+/* Interface wording */
+const UI = {
+  en: { projects:"Projects", all:"All", filter:"Filter projects", category:"Category", location:"Location", year:"Year", visit:"Visit website",
+        prev:"Previous", next:"Next", more:"More projects", pages:"Pages", follow:"Follow us", address:"Address", profile:"Open profile",
+        menu:"Menu", close:"Close", home:"Sanya Ko Operations, home", main:"Main", soon:"image coming soon",
+        notFoundProject:"This project could not be found.", notFoundPage:"This page doesn’t exist.", seeAll:"See all projects",
+        toDark:"Switch to dark mode", toLight:"Switch to light mode", langLabel:"Покажи сайта на български", portrait:"Sanya Kovacheva" },
+  bg: { projects:"Проекти", all:"Всички", filter:"Филтър на проектите", category:"Категория", location:"Локация", year:"Година", visit:"Към сайта",
+        prev:"Предишен", next:"Следващ", more:"Още проекти", pages:"Страници", follow:"Последвайте ни", address:"Адрес", profile:"Отвори профила",
+        menu:"Меню", close:"Затвори", home:"Sanya Ko Operations, начало", main:"Основно меню", soon:"снимката предстои",
+        notFoundProject:"Този проект не е намерен.", notFoundPage:"Тази страница не съществува.", seeAll:"Виж всички проекти",
+        toDark:"Включи тъмен режим", toLight:"Включи светъл режим", langLabel:"View the site in English", portrait:"Саня Ковачева" }
+};
+
+/* ============================ state ============================ */
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+let lang = store.get("sko-lang") === "bg" ? "bg" : "en";
+const T = k => UI[lang][k];
+const L = v => (v && typeof v === "object" && !Array.isArray(v) && ("en" in v || "bg" in v)) ? (v[lang] ?? v.en) : v;
+const cat = c => L(SITE.categories[c]) || c;
+
+/* ============================ rendering ============================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const initials = t => t.replace(/[^A-Za-z0-9 ]/g," ").split(/\s+/).filter(Boolean).map(w=>w[0]).join("").slice(0,3).toUpperCase();
+
+function media(src, alt, label){
+  return src
+    ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy">`
+    : `<div class="ph" role="img" aria-label="${esc(alt)} (${T("soon")})"><span>${esc(label)}</span></div>`;
+}
+
+/* Browsing context: which set of projects the prev/next arrows walk through.
+   "" = all projects, a section key (architecture, graphic-design) or a category slug (web-design). */
+const slugify = c => c.toLowerCase().replace(/\s+/g, "-");
+function contextList(ctx){
+  if (!ctx) return SITE.projects;
+  if (SITE.sections[ctx]) return SITE.projects.filter(p => p.categories.some(c => SITE.sections[ctx].includes(c)));
+  const c = Object.keys(SITE.categories).find(k => slugify(k) === ctx);
+  return c ? SITE.projects.filter(p => p.categories.includes(c)) : SITE.projects;
+}
+const projectHref = (slug, ctx) => `#/project/${esc(slug)}${ctx ? "/" + esc(ctx) : ""}`;
+
+function card(p, ctx){
+  return `<li class="card"><a href="${projectHref(p.slug, ctx)}">
+    <div class="thumb">${media(p.thumb || p.cover, p.title, initials(p.title))}</div>
+    <h2>${esc(p.title)}</h2>
+    <div class="cats">${p.categories.map(c => esc(cat(c))).join(", ")}</div>
+  </a></li>`;
+}
+
+function listingPage(title, list, ctx){
+  // On a section page, only offer that section's own categories as filters
+  const cats = [...new Set(list.flatMap(p => p.categories))].filter(c => !SITE.sections[ctx] || SITE.sections[ctx].includes(c));
+  const filters = cats.length > 1
+    ? `<div class="filters" role="group" aria-label="${T("filter")}">
+        <button aria-pressed="true" data-cat="">${T("all")}</button>
+        ${cats.map(c=>`<button aria-pressed="false" data-cat="${esc(c)}">${esc(cat(c))}</button>`).join("")}
+       </div>` : "";
+  return `
+    <div class="page-head">
+      ${title ? `<h1 class="page-title">${esc(title)}</h1>` : `<h1 class="page-logo"><span class="sr-only">${esc(SITE.name)}</span>${LOGO}</h1>`}
+      ${filters}
+    </div>
+    <ul class="grid" id="grid">${list.map(p => card(p, ctx)).join("")}</ul>`;
+}
+
+function bindFilters(list, ctx){
+  const grid = $("#grid");
+  document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", x===b));
+    const c = b.dataset.cat;
+    const cx = c ? slugify(c) : ctx;
+    grid.innerHTML = list.filter(p => !c || p.categories.includes(c)).map(p => card(p, cx)).join("");
+  }));
+}
+
+/* Long arrows for previous / next project: the original's full-width arrow,
+   drawn with the logo's rounded strokes and 45° angle */
+const HEAD_L = '<svg viewBox="0 0 50 100" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M50 0L0 50L50 100"/></svg>';
+const HEAD_R = '<svg viewBox="0 0 50 100" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M0 0L50 50L0 100"/></svg>';
+
+/* Description text: [text](https://…) becomes a link */
+const rich = t => esc(t).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+/* Project layout B: asymmetric rhythm on a 6-column grid */
+function rhythmLayout(p, desc){
+  if (!desc.length && !p.gallery.length) return "";
+  return `<div class="rhythm">
+      ${desc.length ? `<div class="r-text prose">${desc.map(t=>`<p>${rich(t)}</p>`).join("")}</div>` : ""}
+      ${p.gallery.map((g, k) => {
+        const src = typeof g === "string" ? g : g.src;
+        const cls = typeof g === "object" && g.wide ? "wide" : "s" + (k % 5);
+        return `<figure class="${cls}"><img src="${esc(src)}" alt="${esc(p.title)}" loading="lazy"></figure>`;
+      }).join("")}
+    </div>`;
+}
+
+/* Project layout C: short text, then a horizontal film strip */
+const STRIP_L = '<svg viewBox="0 0 44 16" aria-hidden="true"><path d="M43 8H1M1 8L8 1M1 8L8 15"/></svg>';
+const STRIP_R = '<svg viewBox="0 0 44 16" aria-hidden="true"><path d="M1 8H43M43 8L36 1M43 8L36 15"/></svg>';
+function stripLayout(p, desc){
+  const imgs = p.gallery.map(g => typeof g === "string" ? g : g.src);
+  return `
+    ${desc.length ? `<div class="strip-text prose">${desc.map(t=>`<p>${rich(t)}</p>`).join("")}</div>` : ""}
+    ${imgs.length ? `<div class="strip-wrap">
+      <div class="strip${p.frame ? " framed" : ""}" id="strip" tabindex="0" aria-label="${esc(p.title)}">
+        ${imgs.map(src => `<figure><img src="${esc(src)}" alt="${esc(p.title)}" draggable="false"></figure>`).join("")}
+      </div>
+      ${imgs.length > 1 ? `<div class="strip-bar">
+        <button type="button" id="stripPrev" aria-label="${T("prev")}">${STRIP_L}</button>
+        <button type="button" id="stripNext" aria-label="${T("next")}">${STRIP_R}</button>
+        <span class="strip-count" id="stripCount">1 / ${imgs.length}</span>
+      </div>` : ""}
+    </div>` : ""}`;
+}
+
+function bindStrip(){
+  const strip = document.getElementById("strip");
+  if (!strip) return;
+  const figs = [...strip.children];
+  const prevB = document.getElementById("stripPrev"), nextB = document.getElementById("stripNext"), count = document.getElementById("stripCount");
+  const padL = () => parseFloat(getComputedStyle(strip).paddingLeft);
+  const pos = f => f.offsetLeft - strip.offsetLeft - padL();
+  const current = () => {
+    if (strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 4) return figs.length - 1;
+    let best = 0;
+    figs.forEach((f, k) => { if (Math.abs(pos(f) - strip.scrollLeft) < Math.abs(pos(figs[best]) - strip.scrollLeft)) best = k; });
+    return best;
+  };
+  const go = i => {
+    const f = figs[Math.max(0, Math.min(figs.length - 1, i))];
+    strip.scrollTo({ left: pos(f), behavior: "smooth" });
+  };
+  const update = () => {
+    if (!strip.isConnected) return;
+    const i = current();
+    if (count) count.textContent = `${i + 1} / ${figs.length}`;
+    if (prevB) prevB.disabled = strip.scrollLeft <= 2;
+    if (nextB) nextB.disabled = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2;
+  };
+  prevB && prevB.addEventListener("click", () => go(current() - 1));
+  nextB && nextB.addEventListener("click", () => go(current() + 1));
+  strip.addEventListener("scroll", update, { passive: true });
+  strip.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") { e.preventDefault(); go(current() + 1); }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); go(current() - 1); }
+  });
+  // Drag with the mouse on desktop (touch scrolls natively)
+  let down = false, startX = 0, startLeft = 0;
+  strip.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") return; down = true; startX = e.clientX; startLeft = strip.scrollLeft; strip.classList.add("dragging"); strip.setPointerCapture(e.pointerId); });
+  strip.addEventListener("pointermove", e => { if (down) strip.scrollLeft = startLeft - (e.clientX - startX); });
+  const end = () => { if (!down) return; down = false; strip.classList.remove("dragging"); go(current()); };
+  strip.addEventListener("pointerup", end); strip.addEventListener("pointercancel", end);
+  strip.querySelectorAll("img").forEach(img => img.complete || img.addEventListener("load", update));
+  window.addEventListener("resize", update);
+  update();
+}
+
+function projectPage(slug, ctx){
+  let list = contextList(ctx);
+  if (!list.some(p => p.slug === slug)) { list = SITE.projects; ctx = ""; }
+  const i = list.findIndex(p => p.slug === slug);
+  if (i < 0) return `<p class="empty">${T("notFoundProject")} <a href="#/"><u>${T("seeAll")}</u></a></p>`;
+  const p = SITE.projects[i];
+  const n = list.length;
+  const prev = i > 0 ? list[i - 1] : null;      // first project: no "previous"
+  const next = i < n - 1 ? list[i + 1] : null;  // last project: no "next"
+  const desc = L(p.description) || [];
+  const facts = [
+    [T("category"), esc(p.categories.map(cat).join(", "))],
+    [T("location"), esc(L(p.location))],
+    [T("year"), esc(p.year)],
+  ].filter(f => f[1]);
+  const visit = p.link ? `<a class="visit" href="${esc(p.link)}" target="_blank" rel="noopener">${T("visit")} <span>${esc(p.link.replace(/^https?:\/\//,"").replace(/\/$/,""))}</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 12L12 2M4.5 2H12V9.5"/></svg></a>` : "";
+  return `
+  <article class="project">
+    <div class="project-head">
+      <div><h1 class="page-title">${esc(p.title).replace(/\./g, ".<wbr>")}</h1>${p.subtitle ? `<p class="subtitle">${esc(L(p.subtitle))}</p>` : ""}</div>
+      <div class="head-side"><dl class="facts">${facts.map(([k,v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>${visit}</div>
+    </div>
+    ${p.cover || !p.gallery.length ? `<div class="hero${p.coverFit === "contain" && p.cover ? " fit" : ""}">${media(p.cover, p.title, initials(p.title))}</div>` : ""}
+    ${(p.layout || SITE.projectLayout) === "strip" ? stripLayout(p, desc) : rhythmLayout(p, desc)}
+    ${n > 1 ? `<nav class="pager" aria-label="${T("more")}">
+      ${prev ? `<a class="pg pg-prev" href="${projectHref(prev.slug, ctx)}"><span class="arrow left">${HEAD_L}<i></i></span><span class="pg-word"><b>${T("prev")}</b><small>${esc(prev.title)}</small></span></a>` : ""}
+      ${next ? `<a class="pg pg-next" href="${projectHref(next.slug, ctx)}"><span class="pg-word"><b>${T("next")}</b><small>${esc(next.title)}</small></span><span class="arrow right"><i></i>${HEAD_R}</span></a>` : ""}
+    </nav>` : ""}
+  </article>`;
+}
+
+function aboutPage(){
+  const a = SITE.about;
+  return `
+    <div class="page-head"><h1 class="page-title">${esc(navLabel("about"))}</h1></div>
+    <section class="about">
+      <div class="portrait">${media(a.portrait, T("portrait"), "SK")}</div>
+      <div class="prose">${L(a.paragraphs).map(t=>`<p>${esc(t)}</p>`).join("")}</div>
+    </section>`;
+}
+
+function contactsPage(){
+  const c = SITE.contacts;
+  return `
+    <div class="page-head"><h1 class="page-title">${esc(navLabel("contacts"))}</h1></div>
+    <section class="contacts">
+      <div class="contact-big">
+        <a href="mailto:${esc(c.email)}">${esc(c.email)}</a>
+        <a href="tel:${esc(c.phone.replace(/\s/g,""))}">${esc(c.phone)}</a>
+      </div>
+      <ul class="contact-list">
+        <li><span>${T("address")}</span>${esc(L(c.address))}</li>
+        <li><span>${T("follow")}</span><span class="social-icons">${SITE.social.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener" aria-label="${esc(s.label)}" title="${esc(s.label)}"><i style="--icon:url('${s.icon}')"></i></a>`).join("")}</span></li>
+      </ul>
+    </section>`;
+}
+
+const navLabel = route => L((SITE.nav.find(n => n.route === route) || {}).label);
+
+function render(keepScroll){
+  // Old "graphic-design" links now point to the Design section
+  if (/graphic-design/.test(location.hash)) { location.replace(location.hash.replace("graphic-design", "design")); return; }
+  const [page, arg, ctx] = (location.hash.replace(/^#\/?/, "") || "").split("/");
+  const app = $("#app");
+  let html, after;
+
+  if (!page) { html = listingPage(null, SITE.projects, ""); after = () => bindFilters(SITE.projects, ""); }
+  else if (SITE.sections[page]) {
+    const list = SITE.projects.filter(p => p.categories.some(c => SITE.sections[page].includes(c)));
+    html = listingPage(navLabel(page), list, page); after = () => bindFilters(list, page);
+  }
+  else if (page === "project") { html = projectPage(arg, ctx); after = bindStrip; }
+  else if (page === "about") html = aboutPage();
+  else if (page === "contacts") html = contactsPage();
+  else html = `<p class="empty">${T("notFoundPage")} <a href="#/"><u>${T("seeAll")}</u></a></p>`;
+
+  document.body.dataset.page = page || "home";
+  app.innerHTML = html;
+  after && after();
+
+  document.querySelectorAll("#nav a").forEach(a => {
+    const active = page === "project" && SITE.sections[ctx] && contextList(ctx).some(p => p.slug === arg) ? ctx : page;
+    if (a.dataset.route === active) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+  });
+  const t = page === "project" ? (SITE.projects.find(p=>p.slug===arg)||{}).title : navLabel(page);
+  document.title = t ? `${t} — ${SITE.name}` : SITE.name;
+  closeMenu();
+  if (!keepScroll) window.scrollTo(0,0);
+}
+
+/* Header, footer and the two toggles */
+function chrome(){
+  document.documentElement.lang = lang;
+  $("#brandMark").innerHTML = LOGO;
+  $("#brandName").textContent = SITE.name;
+  $("#brandLink").setAttribute("aria-label", T("home"));
+  $("#nav").setAttribute("aria-label", T("main"));
+  $("#nav").innerHTML = SITE.nav.map(n => `<a href="#/${esc(n.route)}" data-route="${esc(n.route)}">${esc(L(n.label))}</a>`).join("");
+  $("#footPages").innerHTML = SITE.nav.map(n => `<li><a href="#/${esc(n.route)}">${esc(L(n.label))}</a></li>`).join("");
+  $("#footSocial").innerHTML = SITE.social.map(s => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join("");
+  $("#footLocation").innerHTML = L(SITE.location).map(esc).join("<br>");
+  $("#hLocation").textContent = T("location");
+  $("#hPages").textContent = T("pages");
+  $("#hFollow").textContent = T("follow");
+  $("#copy").textContent = SITE.copyright;
+  $("#langBtn").textContent = lang === "en" ? "BG" : "EN";
+  $("#langBtn").setAttribute("aria-label", T("langLabel"));
+  $("#langBtn").setAttribute("lang", lang === "en" ? "bg" : "en");
+  $("#menuBtn").textContent = $("#nav").classList.contains("open") ? T("close") : T("menu");
+  themeButton();
+}
+
+const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg>';
+const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
+const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+const isDark = () => {
+  const t = document.documentElement.dataset.theme;
+  return t ? t === "dark" : darkQuery.matches;
+};
+function themeButton(){
+  const dark = isDark();
+  $("#themeBtn").innerHTML = dark ? SUN : MOON;
+  $("#themeBtn").setAttribute("aria-label", dark ? T("toLight") : T("toDark"));
+  $("#themeBtn").title = dark ? T("toLight") : T("toDark");
+}
+$("#themeBtn").addEventListener("click", () => {
+  const next = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  store.set("sko-theme", next);
+  themeButton();
+});
+darkQuery.addEventListener?.("change", themeButton);
+
+$("#langBtn").addEventListener("click", () => {
+  lang = lang === "en" ? "bg" : "en";
+  store.set("sko-lang", lang);
+  chrome();
+  render(true);
+  drawFooterPattern();
+});
+
+function closeMenu(){
+  $("#nav").classList.remove("open");
+  $("#menuBtn").setAttribute("aria-expanded","false");
+  $("#menuBtn").textContent = T("menu");
+}
+$("#menuBtn").addEventListener("click", () => {
+  const open = $("#nav").classList.toggle("open");
+  $("#menuBtn").setAttribute("aria-expanded", open);
+  $("#menuBtn").textContent = open ? T("close") : T("menu");
+});
+
+
+/* Footer pattern: same proportions as the logo (pitch 40.47, dash 19.6, stroke 8.4).
+   Each text block gets a rectangular field of whole missing dashes, and the block is
+   nudged so it sits exactly in the middle of its field. */
+function drawFooterPattern(){
+  const foot = document.querySelector(".site-footer"), svg = document.getElementById("footPattern");
+  if (!foot || !svg) return;
+  const blocks = [...foot.querySelectorAll(".foot-cols > div, .copy")];
+  blocks.forEach(el => el.style.transform = "");
+  const W = foot.clientWidth, H = foot.clientHeight;
+  const P = W < 600 ? 12 : 14, k = P / 40.47, d = 19.6 * k, sw = 8.4 * k, o = 4.2 * k;
+  const fr = foot.getBoundingClientRect(), gap = P * 0.9;
+  // grid centred in the footer so the outer margins are even
+  const ox = (W - (Math.floor((W - 2 * o) / P) * P + d)) / 2 - o, oy = (H - (Math.floor((H - 2 * o) / P) * P + d)) / 2 - o;
+  const cols = Math.ceil(W / P) + 1, rows = Math.ceil(H / P) + 1;
+  const dx = c => ox + c * P + o, dy = r => oy + r * P + o;   // top-left of a dash's box
+  // dash index range whose box overlaps [a, b]
+  const span = (a, b, start) => [Math.ceil((a - d - start) / P), Math.floor((b - start) / P)];
+  const holes = blocks.map(el => {
+    // union of the actual text lines (not the full-width column boxes)
+    let L = Infinity, T = Infinity, R = -Infinity, B = -Infinity;
+    const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+      if (!n.textContent.trim()) continue;
+      const range = document.createRange(); range.selectNodeContents(n);
+      for (const r of range.getClientRects()) {
+        L = Math.min(L, r.left - fr.left); T = Math.min(T, r.top - fr.top);
+        R = Math.max(R, r.right - fr.left); B = Math.max(B, r.bottom - fr.top);
+      }
+    }
+    if (L === Infinity) return [0, -1, 0, -1];
+    const [c0, c1] = span(L - gap, R + gap, ox + o), [r0, r1] = span(T - gap, B + gap, oy + o);
+    // the clear field runs from the end of the dash before c0 to the start of the dash after c1
+    const fx0 = dx(c0 - 1) + d + sw / 2, fx1 = dx(c1 + 1) - sw / 2;
+    const fy0 = dy(r0 - 1) + d + sw / 2, fy1 = dy(r1 + 1) - sw / 2;
+    el.style.transform = `translate(${((fx0 + fx1) / 2 - (L + R) / 2).toFixed(1)}px, ${((fy0 + fy1) / 2 - (T + B) / 2).toFixed(1)}px)`;
+    return [c0, c1, r0, r1];
+  });
+  let path = "";
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    const x = dx(c), y = dy(r);
+    if (x < 0 || y < 0 || x + d > W || y + d > H) continue;
+    if (holes.some(h => c >= h[0] && c <= h[1] && r >= h[2] && r <= h[3])) continue;
+    path += `M${x.toFixed(1)} ${(y + d).toFixed(1)}l${d.toFixed(1)}-${d.toFixed(1)}`;
+  }
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = `<path d="${path}" fill="none" stroke="currentColor" stroke-width="${sw.toFixed(2)}" stroke-linecap="round"/>`;
+}
+if (window.ResizeObserver) new ResizeObserver(drawFooterPattern).observe(document.querySelector(".site-footer"));
+document.fonts && document.fonts.ready.then(drawFooterPattern);
+
+chrome();
+window.addEventListener("hashchange", () => render());
+render();
+</script>
+</body>
+</html>
