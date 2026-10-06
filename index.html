@@ -6,8 +6,6 @@
 <base href="/">
 <!-- SEO -->
 <!-- /SEO -->
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300..800&family=Sofia+Sans+Extra+Condensed:wght@500..800&display=swap" rel="stylesheet">
@@ -371,8 +369,22 @@ const SITE = {
   // description: { en: [paragraphs], bg: [paragraphs] }
   projects: [
     { slug: "fluxveil",       title: "FluxVeil",       categories: ["Architecture", "Interior Design"], year: "2026", location: { en: "Sofia", bg: "София" }, cover: "",
+      subtitle: { en: "Concept for CUBE Club", bg: "Концепция за КУБ Клуб" },
       thumb: "images/fluxveil/thumb.jpg",
-      description: {en:[],bg:[]},
+      description: {
+        en: [
+          "An initial spatial concept for the CUBE Gallery competition by Toplocentrala. FluxVeil is not the final competition entry, but a spatial experiment for a scenario where the brief encompasses both halls rather than just one. Soon the final competition proposal for CUBE Club, which strictly follows the official parameters of the open call, will be shared.",
+          "FluxVeil is a curtain of free-hanging yellow polyurethane cables — serving as both a visual boundary and a zoning element, while remaining an invitation to pass through freely along its entire length.",
+          "The space for meetings, relaxation, and reading remains distinct, yet continuously connected with the rest of CUBE Club in constant interaction.",
+          "Depending on events and usage scenarios, the curtain can dynamically condense, thin out, open, or close locally."
+        ],
+        bg: [
+          "Идеен вариант за конкурса за Галерия КУБ на Топлоцентрала. FluxVeil не е финално конкурсно предложение, а пространствен експеримент за сценарий, където заданието обхваща двете зали. Финалното конкурсно предложение за КУБ Клуб, което следва официалните параметри на отворената покана, ще се покаже скоро.",
+          "FluxVeil е завеса от свободновисящи жълти полиуретанови кабели — едновременно визуална граница и зониращ елемент, но и покана за свободно преминаване по цялата ѝ дължина.",
+          "Пространството за срещи, почивка и четене остава обособено, но и непрекъснато свързано с останалата част от КУБ Клуб в постоянна интеракция.",
+          "В зависимост от събитията и сценариите на ползване, завесата може динамично да се сгъстява, разрежда, отваря или затваря локално."
+        ]
+      },
       gallery: [
         "images/fluxveil/01.jpg",
         "images/fluxveil/02.jpg",
