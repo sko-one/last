@@ -5,21 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sanya Ko Operations</title>
 <meta name="description" content="Sanya Ko Operations — architecture, graphic and web design. Sofia and Varna, Bulgaria.">
-<link rel="icon" href="favicon.ico" sizes="48x48">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<!-- Link previews (Facebook, LinkedIn, Viber, Slack…). Change sko.one if the site lives on another address. -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Sanya Ko Operations">
-<meta property="og:title" content="Sanya Ko Operations">
-<meta property="og:description" content="Architecture, graphic and web design. Sofia and Varna, Bulgaria.">
-<meta property="og:url" content="https://sko.one/">
-<meta property="og:image" content="https://sko.one/images/share.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300..800&family=Sofia+Sans+Extra+Condensed:wght@500..800&display=swap" rel="stylesheet">
@@ -304,7 +289,7 @@ const SITE = {
   projectLayout: "strip",
 
   nav: [
-    { route: "about",          label: { en: "About",          bg: "За нас" } },
+    { route: "about",          label: { en: "About",          bg: "За SKO" } },
     { route: "architecture",   label: { en: "Architecture",   bg: "Архитектура" } },
     { route: "design",         label: { en: "Design",         bg: "Дизайн" } },
     { route: "contacts",       label: { en: "Contacts",       bg: "Контакти" } }
@@ -446,15 +431,19 @@ const SITE = {
         "images/mn50/05.jpg",
         "images/mn50/06.jpg"
       ] },
-    { slug: "amorpha-org",    title: "amorpha.org",    categories: ["Web Design"],                     year: "", location: "", cover: "", link: "https://amorpha.org", frame: true,
-      thumb: "images/amorpha-org/thumb.jpg",
+    { slug: "amorpha-org",    title: "amorpha.org",    categories: ["Web Design"],                     year: "", location: "", cover: "", description: {en:[],bg:[]}, gallery: [], link: "https://amorpha.org" },
+    { slug: "vfu-green-park", title: "VFU Green Park", categories: ["Architecture", "Landscape"],       year: "", location: { en: "Varna", bg: "Варна" }, cover: "",
+      thumb: "images/vfu-green-park/thumb.jpg",
       description: {en:[],bg:[]},
       gallery: [
-        "images/amorpha-org/01.jpg",
-        "images/amorpha-org/02.jpg",
-        "images/amorpha-org/03.jpg"
-      ] },
-    { slug: "vfu-green-park", title: "VFU Green Park", categories: ["Architecture", "Landscape"],       year: "", location: "", cover: "", description: {en:[],bg:[]}, gallery: [] }
+        "images/vfu-green-park/01.jpg",
+        "images/vfu-green-park/02.jpg",
+        "images/vfu-green-park/03.jpg",
+        "images/vfu-green-park/04.jpg",
+        "images/vfu-green-park/05.jpg",
+        "images/vfu-green-park/06.jpg",
+        "images/vfu-green-park/07.jpg"
+      ] }
   ]
 };
 
@@ -628,7 +617,7 @@ function projectPage(slug, ctx){
   if (!list.some(p => p.slug === slug)) { list = SITE.projects; ctx = ""; }
   const i = list.findIndex(p => p.slug === slug);
   if (i < 0) return `<p class="empty">${T("notFoundProject")} <a href="#/"><u>${T("seeAll")}</u></a></p>`;
-  const p = SITE.projects[i];
+  const p = list[i];
   const n = list.length;
   const prev = i > 0 ? list[i - 1] : null;      // first project: no "previous"
   const next = i < n - 1 ? list[i + 1] : null;  // last project: no "next"
