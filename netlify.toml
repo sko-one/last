@@ -1,0 +1,11 @@
+# Netlify reads this file automatically. On every deploy it runs build.mjs,
+# which writes the finished site (one HTML file per page) into dist/.
+[build]
+  command = "node build.mjs"
+  publish = "dist"
+
+# Old address of the Design section
+[[redirects]]
+  from = "/graphic-design"
+  to = "/design"
+  status = 301

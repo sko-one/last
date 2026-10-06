@@ -1,16 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="bg">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sanya Ko Operations</title>
-<meta name="description" content="Sanya Ko Operations — architecture, graphic and web design. Sofia and Varna, Bulgaria.">
+<base href="/">
+<!-- SEO -->
+<!-- /SEO -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300..800&family=Sofia+Sans+Extra+Condensed:wght@500..800&display=swap" rel="stylesheet">
 <script>
   // Apply saved theme before paint to avoid a flash
   try { const t = localStorage.getItem("sko-theme"); if (t) document.documentElement.dataset.theme = t; } catch(e){}
+  // Intro: only on the home page, only on the first visit, never with reduced motion
+  try {
+    if (!location.pathname.replace(/\/(index(\.html)?)?$/, "") && !location.hash.replace(/^#\/?/, "") &&
+        !localStorage.getItem("sko-intro") &&
+        !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");
+  } catch(e){}
 </script>
 <style>
 :root{
@@ -83,7 +92,7 @@ main{padding:0 var(--pad);min-height:60vh}
 .page-title{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(52px,11vw,168px);line-height:.86;letter-spacing:-.025em;overflow-wrap:anywhere}
 /* Home page: the large logo replaces the "Projects" heading */
 .page-logo{margin:0;line-height:0}
-.page-logo svg{width:clamp(120px,15vw,210px);height:auto;display:block}
+.page-logo svg{width:clamp(96px,12vw,168px);height:auto;display:block}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 /* Home page header: the studio name instead of the small logo */
 /* Home page: the small logo keeps its place but stays hidden, so the name never moves between pages */
@@ -237,14 +246,25 @@ body[data-page="home"] .brand-mark{visibility:hidden}
 .foot-cols a:hover{color:var(--muted)}
 .copy{margin-top:32px;font-size:13px;color:var(--muted)}
 
+/* Intro: the footer's dash grid over the whole screen, with the logo set into it on the same grid */
+#intro{display:none}
+.intro #intro{display:block;position:fixed;inset:0;z-index:100;background:var(--paper);color:var(--pattern);cursor:pointer;transition:opacity .4s ease}
+.intro body{overflow:hidden}
+.intro-pattern{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .4s ease}
+.intro-mark{position:absolute;line-height:0;color:var(--ink);opacity:0;transition:opacity .4s ease}
+.intro-mark svg{width:100%;height:100%;display:block}
+#intro.show .intro-pattern,#intro.show .intro-mark{opacity:1}
+#intro.out{opacity:0}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
+<div id="intro" aria-hidden="true"><svg class="intro-pattern" id="introPattern"></svg><span class="intro-mark" id="introMark"></span></div>
 
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="#/" id="brandLink">
+    <a class="brand" href="/" id="brandLink">
       <span class="brand-mark" id="brandMark"></span>
       <span class="brand-name" id="brandName"></span>
     </a>
@@ -471,6 +491,123 @@ const SITE = {
   ]
 };
 
+/* =========================================================
+   SEO: page titles, descriptions, share image and structured data.
+   build.mjs reads everything from "const SITE" down to SEO:END on every
+   Netlify deploy and writes a separate HTML file per page with these filled in,
+   so keep this block plain JavaScript (no document/window).
+   ========================================================= */
+const ORIGIN = "https://sko.one";
+const SEO = {
+  image: "/images/og.png",
+  founder: { name: "Саня Ковачева", alternateName: ["Sanya Kovacheva"], jobTitle: { bg: "Архитект", en: "Architect" } },
+  studioNames: ["SKO", "СКО", "SKO студио", "Студио SKO"],
+  home: {
+    bg: { title: "Саня Ковачева – архитект | SKO Sanya Ko Operations",
+          description: "SKO (Sanya Ko Operations, СКО) е студиото на архитект Саня Ковачева – архитектура, интериор, ландшафт, продуктов и графичен дизайн. София и Варна." },
+    en: { title: "Sanya Kovacheva – architect | SKO Sanya Ko Operations",
+          description: "SKO (Sanya Ko Operations) is the studio of architect Sanya Kovacheva – architecture, interiors, landscape, product and graphic design. Sofia and Varna, Bulgaria." },
+    h1: { bg: "SKO – Sanya Ko Operations, студио на архитект Саня Ковачева", en: "SKO – Sanya Ko Operations, studio of architect Sanya Kovacheva" }
+  },
+  pages: {
+    about: {
+      bg: { title: "За SKO – архитект Саня Ковачева | Sanya Ko Operations",
+            description: "Саня Ковачева е архитект и основател на студио SKO (Sanya Ko Operations) – инвестиционно проектиране, продуктов дизайн и визуална идентичност." },
+      en: { title: "About SKO – architect Sanya Kovacheva | Sanya Ko Operations",
+            description: "Sanya Kovacheva is an architect and the founder of SKO (Sanya Ko Operations) – investment design, product design and visual identity." } },
+    architecture: {
+      bg: { title: "Архитектура – SKO студио, архитект Саня Ковачева",
+            description: "Архитектурни, интериорни и ландшафтни проекти на SKO студио и архитект Саня Ковачева в София, Варна и чужбина." },
+      en: { title: "Architecture – SKO studio, architect Sanya Kovacheva",
+            description: "Architecture, interior and landscape projects by SKO studio and architect Sanya Kovacheva." } },
+    design: {
+      bg: { title: "Дизайн – SKO студио | Sanya Ko Operations",
+            description: "Графичен, уеб и продуктов дизайн от SKO (Sanya Ko Operations) – лога, визуална идентичност и уебсайтове." },
+      en: { title: "Design – SKO studio | Sanya Ko Operations",
+            description: "Graphic, web and product design by SKO (Sanya Ko Operations) – logos, visual identity and websites." } },
+    contacts: {
+      bg: { title: "Контакти – SKO студио, София | Sanya Ko Operations",
+            description: "Свържете се със SKO (Sanya Ko Operations) и архитект Саня Ковачева: бул. „Цар Борис III“ 171, София." },
+      en: { title: "Contacts – SKO studio, Sofia | Sanya Ko Operations",
+            description: "Get in touch with SKO (Sanya Ko Operations) and architect Sanya Kovacheva: 171 Tsar Boris III Blvd, Sofia." } }
+  },
+  projectSuffix: { bg: "SKO, Саня Ковачева", en: "SKO, Sanya Kovacheva" },
+  notFound: { bg: "Страницата не е намерена | SKO", en: "Page not found | SKO" }
+};
+
+/* Everything a page needs in its <head>, for a path such as "/", "/about" or "/project/fluxveil" */
+function seoFor(path, lang = "bg"){
+  const pick = v => (v && typeof v === "object" && !Array.isArray(v) && ("en" in v || "bg" in v)) ? (v[lang] ?? v.en) : v;
+  const plain = s => String(s || "").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\s+/g, " ").trim();
+  const clip = s => s.length > 160 ? s.slice(0, 157).replace(/[\s,.;:–-]+[^\s]*$/, "") + "…" : s;
+  const abs = u => u ? ORIGIN + "/" + String(u).replace(/^\/+/, "") : "";
+  const [page = "", arg = ""] = String(path).replace(/\.html$/, "").replace(/\/index$/, "").replace(/^\/+|\/+$/g, "").split("/");
+
+  const addr = (SITE.contacts.address.bg || "").split(/,\s*(?=[^,]+$)/);
+  const studio = {
+    "@type": "ProfessionalService", "@id": ORIGIN + "/#studio",
+    name: SITE.name, alternateName: SEO.studioNames, url: ORIGIN + "/",
+    description: SEO.home.bg.description,
+    logo: abs("images/logo-512.png"), image: abs(SEO.image),
+    email: SITE.contacts.email, telephone: SITE.contacts.phone.replace(/\s/g, ""),
+    address: { "@type": "PostalAddress", streetAddress: addr[0], addressLocality: addr[1] || "София", addressCountry: "BG" },
+    areaServed: "BG", foundingDate: "2018",
+    founder: { "@id": ORIGIN + "/#founder" },
+    sameAs: SITE.social.map(s => s.url)
+  };
+  const founder = {
+    "@type": "Person", "@id": ORIGIN + "/#founder",
+    name: SEO.founder.name, alternateName: SEO.founder.alternateName, jobTitle: pick(SEO.founder.jobTitle),
+    url: ORIGIN + "/about", image: abs(SITE.about.portrait),
+    worksFor: { "@id": ORIGIN + "/#studio" },
+    sameAs: SITE.social.filter(s => /linkedin/i.test(s.url)).map(s => s.url)
+  };
+  const website = { "@type": "WebSite", "@id": ORIGIN + "/#website", url: ORIGIN + "/", name: SITE.name, alternateName: SEO.studioNames, inLanguage: "bg", publisher: { "@id": ORIGIN + "/#studio" } };
+
+  let m, p;
+  if (!page) m = { ...pick(SEO.home), path: "/" };
+  else if (SEO.pages[page]) m = { ...pick(SEO.pages[page]), path: "/" + page };
+  else if (page === "project" && (p = SITE.projects.find(x => x.slug === arg))) {
+    const cats = p.categories.map(c => pick(SITE.categories[c]) || c).join(", ");
+    const loc = pick(p.location) || "";
+    const fallback = lang === "bg"
+      ? `${p.title} – ${cats.toLowerCase()}${loc ? ", " + loc : ""}${p.year ? ", " + p.year + " г" : ""}. Проект на SKO студио и архитект Саня Ковачева.`
+      : `${p.title} – ${cats.toLowerCase()}${loc ? ", " + loc : ""}${p.year ? ", " + p.year : ""}. A project by SKO studio and architect Sanya Kovacheva.`;
+    const image = p.cover || p.thumb || (p.gallery || [])[0];
+    m = { title: `${p.title} – ${cats} | ${pick(SEO.projectSuffix)}`,
+          description: clip(plain((pick(p.description) || [])[0]) || fallback),
+          path: "/project/" + p.slug, image,
+          work: { "@type": "CreativeWork", "@id": ORIGIN + "/project/" + p.slug + "#work", name: p.title, url: ORIGIN + "/project/" + p.slug,
+                  genre: cats, image: image ? abs(image) : undefined, dateCreated: p.year || undefined,
+                  locationCreated: loc ? { "@type": "Place", name: loc } : undefined,
+                  creator: { "@id": ORIGIN + "/#studio" }, author: { "@id": ORIGIN + "/#founder" } } };
+  }
+  else return { title: pick(SEO.notFound), description: "", url: "", image: abs(SEO.image), noindex: true, lang };
+
+  return { title: m.title, description: m.description, url: ORIGIN + m.path, image: abs(m.image || SEO.image), lang,
+           jsonld: { "@context": "https://schema.org", "@graph": [website, studio, founder, ...(m.work ? [m.work] : [])] } };
+}
+
+/* The <head> tags for one page (they go between the two SEO comments in <head>) */
+function seoHead(m){
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  return [
+    `<title>${e(m.title)}</title>`,
+    m.description && `<meta name="description" content="${e(m.description)}">`,
+    m.noindex ? `<meta name="robots" content="noindex">` : `<link rel="canonical" href="${e(m.url)}">`,
+    `<meta property="og:type" content="website">`,
+    `<meta property="og:site_name" content="${e(SITE.name)}">`,
+    `<meta property="og:locale" content="${m.lang === "en" ? "en_US" : "bg_BG"}">`,
+    `<meta property="og:title" content="${e(m.title)}">`,
+    m.description && `<meta property="og:description" content="${e(m.description)}">`,
+    m.url && `<meta property="og:url" content="${e(m.url)}">`,
+    `<meta property="og:image" content="${e(m.image)}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+    m.jsonld && `<script type="application/ld+json">${JSON.stringify(m.jsonld).replace(/</g, "\\u003c")}<\/script>`
+  ].filter(Boolean).join("\n");
+}
+/* SEO:END */
+
 /* SKO logo, vectorized; uses currentColor so it follows light/dark mode */
 const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 635 635"><path d="M4.2 23.8l19.6-19.6M44.7 23.8l19.6-19.6M85.1 23.8l19.6-19.6M125.6 23.8l19.6-19.6M166.1 23.8l19.6-19.6M206.5 23.8l19.6-19.6M247.0 23.8l19.6-19.6M287.5 23.8l19.6-19.6M328.0 23.8l19.6-19.6M368.4 23.8l19.6-19.6M408.9 23.8l19.6-19.6M449.4 23.8l19.6-19.6M489.8 23.8l19.6-19.6M530.3 23.8l19.6-19.6M570.8 23.8l19.6-19.6M611.2 23.8l19.6-19.6M4.2 64.3l19.6-19.6M44.7 64.3l19.6-19.6M85.1 64.3l19.6-19.6M125.6 64.3l19.6-19.6M166.1 64.3l19.6-19.6M206.5 64.3l19.6-19.6M247.0 64.3l19.6-19.6M287.5 64.3l19.6-19.6M328.0 64.3l19.6-19.6M368.4 64.3l19.6-19.6M408.9 64.3l19.6-19.6M449.4 64.3l19.6-19.6M489.8 64.3l19.6-19.6M530.3 64.3l19.6-19.6M570.8 64.3l19.6-19.6M611.2 64.3l19.6-19.6M4.2 104.7l19.6-19.6M44.7 104.7l19.6-19.6M85.1 104.7l19.6-19.6M125.6 104.7l19.6-19.6M166.1 104.7l19.6-19.6M206.5 104.7l19.6-19.6M247.0 104.7l19.6-19.6M287.5 104.7l19.6-19.6M328.0 104.7l19.6-19.6M368.4 104.7l19.6-19.6M408.9 104.7l19.6-19.6M449.4 104.7l19.6-19.6M489.8 104.7l19.6-19.6M530.3 104.7l19.6-19.6M570.8 104.7l19.6-19.6M611.2 104.7l19.6-19.6M4.2 145.2l19.6-19.6M44.7 145.2l19.6-19.6M85.1 145.2l19.6-19.6M125.6 145.2l19.6-19.6M166.1 145.2l19.6-19.6M206.5 145.2l19.6-19.6M247.0 145.2l19.6-19.6M287.5 145.2l19.6-19.6M328.0 145.2l19.6-19.6M368.4 145.2l19.6-19.6M408.9 145.2l19.6-19.6M449.4 145.2l19.6-19.6M489.8 145.2l19.6-19.6M530.3 145.2l19.6-19.6M570.8 145.2l19.6-19.6M611.2 145.2l19.6-19.6M4.2 185.7l19.6-19.6M44.7 185.7l19.6-19.6M85.1 185.7l19.6-19.6M125.6 185.7l19.6-19.6M166.1 185.7l19.6-19.6M206.5 185.7l19.6-19.6M247.0 185.7l19.6-19.6M287.5 185.7l19.6-19.6M328.0 185.7l19.6-19.6M368.4 185.7l19.6-19.6M408.9 185.7l19.6-19.6M449.4 185.7l19.6-19.6M489.8 185.7l19.6-19.6M530.3 185.7l19.6-19.6M570.8 185.7l19.6-19.6M611.2 185.7l19.6-19.6M4.2 226.2l19.6-19.6M44.7 226.2l19.6-19.6M85.1 226.2l19.6-19.6M125.6 226.2l19.6-19.6M166.1 226.2l19.6-19.6M206.5 226.2l19.6-19.6M247.0 226.2l19.6-19.6M287.5 226.2l19.6-19.6M328.0 226.2l19.6-19.6M368.4 226.2l19.6-19.6M408.9 226.2l19.6-19.6M449.4 226.2l19.6-19.6M489.8 226.2l19.6-19.6M530.3 226.2l19.6-19.6M570.8 226.2l19.6-19.6M611.2 226.2l19.6-19.6M4.2 266.6l19.6-19.6M44.7 266.6l19.6-19.6M85.1 266.6l19.6-19.6M125.6 266.6l19.6-19.6M166.1 266.6l19.6-19.6M206.5 266.6l19.6-19.6M247.0 266.6l19.6-19.6M287.5 266.6l19.6-19.6M328.0 266.6l19.6-19.6M368.4 266.6l19.6-19.6M408.9 266.6l19.6-19.6M449.4 266.6l19.6-19.6M489.8 266.6l19.6-19.6M530.3 266.6l19.6-19.6M570.8 266.6l19.6-19.6M611.2 266.6l19.6-19.6M4.2 307.1l19.6-19.6M44.7 307.1l19.6-19.6M85.1 307.1l19.6-19.6M125.6 307.1l19.6-19.6M166.1 307.1l19.6-19.6M206.5 307.1l19.6-19.6M247.0 307.1l19.6-19.6M287.5 307.1l19.6-19.6M328.0 307.1l19.6-19.6M368.4 307.1l19.6-19.6M408.9 307.1l19.6-19.6M449.4 307.1l19.6-19.6M489.8 307.1l19.6-19.6M530.3 307.1l19.6-19.6M570.8 307.1l19.6-19.6M611.2 307.1l19.6-19.6M4.2 347.6l19.6-19.6M44.7 347.6l19.6-19.6M85.1 347.6l19.6-19.6M125.6 347.6l19.6-19.6M166.1 347.6l19.6-19.6M206.5 347.6l19.6-19.6M247.0 347.6l19.6-19.6M287.5 347.6l19.6-19.6M328.0 347.6l19.6-19.6M368.4 347.6l19.6-19.6M408.9 347.6l19.6-19.6M449.4 347.6l19.6-19.6M489.8 347.6l19.6-19.6M530.3 347.6l19.6-19.6M570.8 347.6l19.6-19.6M611.2 347.6l19.6-19.6M4.2 388.0l19.6-19.6M44.7 388.0l19.6-19.6M85.1 388.0l19.6-19.6M125.6 388.0l19.6-19.6M166.1 388.0l19.6-19.6M206.5 388.0l19.6-19.6M247.0 388.0l19.6-19.6M287.5 388.0l19.6-19.6M328.0 388.0l19.6-19.6M368.4 388.0l19.6-19.6M408.9 388.0l19.6-19.6M449.4 388.0l19.6-19.6M489.8 388.0l19.6-19.6M530.3 388.0l19.6-19.6M570.8 388.0l19.6-19.6M611.2 388.0l19.6-19.6M4.2 428.5l19.6-19.6M44.7 428.5l19.6-19.6M85.1 428.5l19.6-19.6M125.6 428.5l19.6-19.6M166.1 428.5l19.6-19.6M206.5 428.5l19.6-19.6M247.0 428.5l19.6-19.6M287.5 428.5l19.6-19.6M328.0 428.5l19.6-19.6M368.4 428.5l19.6-19.6M408.9 428.5l19.6-19.6M449.4 428.5l19.6-19.6M489.8 428.5l19.6-19.6M530.3 428.5l19.6-19.6M570.8 428.5l19.6-19.6M611.2 428.5l19.6-19.6M4.2 469.0l19.6-19.6M44.7 469.0l19.6-19.6M328.0 469.0l19.6-19.6M368.4 469.0l19.6-19.6M408.9 469.0l19.6-19.6M449.4 469.0l19.6-19.6M489.8 469.0l19.6-19.6M530.3 469.0l19.6-19.6M570.8 469.0l19.6-19.6M611.2 469.0l19.6-19.6M4.2 509.4l19.6-19.6M44.7 509.4l19.6-19.6M328.0 509.4l19.6-19.6M368.4 509.4l19.6-19.6M408.9 509.4l19.6-19.6M449.4 509.4l19.6-19.6M489.8 509.4l19.6-19.6M530.3 509.4l19.6-19.6M570.8 509.4l19.6-19.6M611.2 509.4l19.6-19.6M4.2 549.9l19.6-19.6M44.7 549.9l19.6-19.6M328.0 549.9l19.6-19.6M368.4 549.9l19.6-19.6M408.9 549.9l19.6-19.6M449.4 549.9l19.6-19.6M489.8 549.9l19.6-19.6M530.3 549.9l19.6-19.6M570.8 549.9l19.6-19.6M611.2 549.9l19.6-19.6M4.2 590.4l19.6-19.6M44.7 590.4l19.6-19.6M85.1 590.4l19.6-19.6M125.6 590.4l19.6-19.6M166.1 590.4l19.6-19.6M206.5 590.4l19.6-19.6M247.0 590.4l19.6-19.6M287.5 590.4l19.6-19.6M328.0 590.4l19.6-19.6M368.4 590.4l19.6-19.6M408.9 590.4l19.6-19.6M449.4 590.4l19.6-19.6M489.8 590.4l19.6-19.6M530.3 590.4l19.6-19.6M570.8 590.4l19.6-19.6M611.2 590.4l19.6-19.6M4.2 630.8l19.6-19.6M44.7 630.8l19.6-19.6M85.1 630.8l19.6-19.6M125.6 630.8l19.6-19.6M166.1 630.8l19.6-19.6M206.5 630.8l19.6-19.6M247.0 630.8l19.6-19.6M287.5 630.8l19.6-19.6M328.0 630.8l19.6-19.6M368.4 630.8l19.6-19.6M408.9 630.8l19.6-19.6M449.4 630.8l19.6-19.6M489.8 630.8l19.6-19.6M530.3 630.8l19.6-19.6M570.8 630.8l19.6-19.6M611.2 630.8l19.6-19.6" fill="none" stroke="currentColor" stroke-width="8.4" stroke-linecap="round"/><path d="M266.8 446.5 L259.2 448.5 L253.5 451.5 L251.0 453.5 L247.8 457.0 L245.0 461.2 L243.0 466.8 L241.8 475.5 L242.0 528.2 L243.0 533.5 L246.2 541.0 L248.0 543.5 L251.8 547.2 L254.5 549.2 L261.2 552.2 L268.2 553.8 L278.0 554.0 L284.0 553.2 L292.2 550.5 L298.0 546.8 L301.8 542.8 L303.8 539.8 L305.8 535.0 L306.8 531.2 L307.5 525.2 L307.5 474.8 L306.8 469.0 L304.8 462.5 L302.5 458.5 L297.0 452.5 L294.0 450.5 L290.2 448.8 L282.0 446.5ZM271.5 460.0 L279.5 460.2 L282.5 461.2 L286.0 463.2 L290.0 468.0 L291.0 470.5 L292.0 476.0 L292.0 524.2 L291.0 529.5 L288.8 534.0 L286.0 536.8 L281.5 539.2 L277.0 540.2 L271.8 540.2 L268.0 539.5 L265.5 538.5 L263.0 536.8 L260.8 534.5 L258.8 531.5 L257.2 525.0 L257.2 475.2 L257.8 471.8 L259.8 467.0 L263.5 463.0 L266.5 461.2ZM166.8 447.8 L165.2 450.2 L165.2 548.8 L166.0 550.5 L167.5 551.8 L169.8 552.8 L173.8 553.2 L178.0 552.2 L180.8 549.8 L180.8 517.8 L188.8 507.5 L190.5 506.0 L214.0 541.0 L220.2 551.0 L222.2 552.8 L224.5 553.5 L228.8 553.2 L231.2 552.0 L233.5 550.0 L234.8 547.8 L234.8 544.8 L233.8 542.5 L201.0 493.0 L201.5 491.2 L228.8 457.5 L229.8 455.8 L230.0 454.2 L229.8 452.2 L228.8 450.2 L227.0 448.5 L223.8 446.5 L219.5 446.2 L217.8 447.0 L215.2 449.8 L181.2 494.8 L180.8 494.2 L180.8 449.2 L179.2 447.5 L175.5 446.2 L169.2 446.5ZM117.0 445.8 L110.5 446.8 L104.5 448.5 L98.2 451.8 L92.8 457.0 L90.0 461.2 L88.0 468.2 L87.8 476.2 L88.2 480.8 L89.0 483.8 L91.0 488.0 L93.5 491.5 L96.5 494.5 L105.5 500.2 L120.2 506.2 L124.5 508.5 L128.8 511.2 L132.0 514.5 L135.0 520.2 L135.2 527.2 L134.0 531.8 L132.2 534.2 L128.5 537.5 L124.0 539.5 L119.8 540.2 L114.0 540.2 L109.2 539.5 L107.5 538.5 L106.5 538.5 L101.5 535.5 L95.0 529.5 L93.2 528.8 L90.5 528.8 L88.8 529.8 L86.0 533.0 L85.2 535.0 L85.2 538.8 L87.5 543.0 L90.8 546.2 L93.5 548.2 L99.5 551.2 L104.8 553.0 L110.2 554.0 L122.0 554.2 L128.5 553.2 L134.2 551.2 L140.0 548.0 L144.8 543.5 L146.8 540.8 L149.8 533.8 L150.8 528.5 L150.5 516.0 L149.8 512.5 L147.2 506.8 L144.8 503.0 L141.0 499.2 L136.2 495.8 L132.2 493.5 L131.5 493.5 L130.2 492.5 L129.5 492.5 L128.2 491.5 L125.0 490.5 L123.5 489.5 L122.5 489.5 L117.5 487.5 L111.0 484.2 L108.8 482.8 L105.0 479.0 L103.8 476.2 L103.2 473.5 L103.8 468.2 L104.8 466.0 L107.8 462.8 L111.8 460.5 L116.5 459.2 L124.5 459.0 L128.8 459.5 L136.0 462.2 L139.2 464.2 L144.2 464.2 L146.5 462.0 L147.8 459.5 L148.2 455.0 L146.8 452.2 L143.0 449.5 L137.5 447.5 L126.5 445.8Z" fill="currentColor" fill-rule="evenodd"/></svg>`;
 
@@ -493,7 +630,7 @@ const store = {
   get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
   set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
 };
-let lang = store.get("sko-lang") === "bg" ? "bg" : "en";
+let lang = store.get("sko-lang") === "en" ? "en" : "bg";
 const T = k => UI[lang][k];
 const L = v => (v && typeof v === "object" && !Array.isArray(v) && ("en" in v || "bg" in v)) ? (v[lang] ?? v.en) : v;
 const cat = c => L(SITE.categories[c]) || c;
@@ -518,7 +655,7 @@ function contextList(ctx){
   const c = Object.keys(SITE.categories).find(k => slugify(k) === ctx);
   return c ? SITE.projects.filter(p => p.categories.includes(c)) : SITE.projects;
 }
-const projectHref = (slug, ctx) => `#/project/${esc(slug)}${ctx ? "/" + esc(ctx) : ""}`;
+const projectHref = (slug, ctx) => `/project/${esc(slug)}${ctx ? "?in=" + esc(ctx) : ""}`;
 
 function card(p, ctx){
   return `<li class="card"><a href="${projectHref(p.slug, ctx)}">
@@ -538,7 +675,7 @@ function listingPage(title, list, ctx){
        </div>` : "";
   return `
     <div class="page-head">
-      ${title ? `<h1 class="page-title">${esc(title)}</h1>` : `<h1 class="page-logo"><span class="sr-only">${esc(SITE.name)}</span>${LOGO}</h1>`}
+      ${title ? `<h1 class="page-title">${esc(title)}</h1>` : `<h1 class="page-logo"><span class="sr-only">${esc(L(SEO.home.h1))}</span>${LOGO}</h1>`}
       ${filters}
     </div>
     <ul class="grid" id="grid">${list.map(p => card(p, ctx)).join("")}</ul>`;
@@ -640,7 +777,7 @@ function projectPage(slug, ctx){
   let list = contextList(ctx);
   if (!list.some(p => p.slug === slug)) { list = SITE.projects; ctx = ""; }
   const i = list.findIndex(p => p.slug === slug);
-  if (i < 0) return `<p class="empty">${T("notFoundProject")} <a href="#/"><u>${T("seeAll")}</u></a></p>`;
+  if (i < 0) return `<p class="empty">${T("notFoundProject")} <a href="/"><u>${T("seeAll")}</u></a></p>`;
   const p = list[i];
   const n = list.length;
   const prev = i > 0 ? list[i - 1] : null;      // first project: no "previous"
@@ -697,8 +834,10 @@ const navLabel = route => L((SITE.nav.find(n => n.route === route) || {}).label)
 
 function render(keepScroll){
   // Old "graphic-design" links now point to the Design section
-  if (/graphic-design/.test(location.hash)) { location.replace(location.hash.replace("graphic-design", "design")); return; }
-  const [page, arg, ctx] = (location.hash.replace(/^#\/?/, "") || "").split("/");
+  if (/graphic-design/.test(location.pathname + location.search))
+    history.replaceState(null, "", (location.pathname + location.search).replace("graphic-design", "design"));
+  const [page = "", arg = ""] = routePath().split("/");
+  const ctx = new URLSearchParams(location.search).get("in") || "";
   const app = $("#app");
   let html, after;
 
@@ -710,7 +849,7 @@ function render(keepScroll){
   else if (page === "project") { html = projectPage(arg, ctx); after = bindStrip; }
   else if (page === "about") html = aboutPage();
   else if (page === "contacts") html = contactsPage();
-  else html = `<p class="empty">${T("notFoundPage")} <a href="#/"><u>${T("seeAll")}</u></a></p>`;
+  else html = `<p class="empty">${T("notFoundPage")} <a href="/"><u>${T("seeAll")}</u></a></p>`;
 
   document.body.dataset.page = page || "home";
   app.innerHTML = html;
@@ -720,8 +859,7 @@ function render(keepScroll){
     const active = page === "project" && SITE.sections[ctx] && contextList(ctx).some(p => p.slug === arg) ? ctx : page;
     if (a.dataset.route === active) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
   });
-  const t = page === "project" ? (SITE.projects.find(p=>p.slug===arg)||{}).title : navLabel(page);
-  document.title = t ? `${t} — ${SITE.name}` : SITE.name;
+  applySeo();
   closeMenu();
   if (!keepScroll) window.scrollTo(0,0);
 }
@@ -733,8 +871,8 @@ function chrome(){
   $("#brandName").textContent = SITE.name;
   $("#brandLink").setAttribute("aria-label", T("home"));
   $("#nav").setAttribute("aria-label", T("main"));
-  $("#nav").innerHTML = SITE.nav.map(n => `<a href="#/${esc(n.route)}" data-route="${esc(n.route)}">${esc(L(n.label))}</a>`).join("");
-  $("#footPages").innerHTML = SITE.nav.map(n => `<li><a href="#/${esc(n.route)}">${esc(L(n.label))}</a></li>`).join("");
+  $("#nav").innerHTML = SITE.nav.map(n => `<a href="/${esc(n.route)}" data-route="${esc(n.route)}">${esc(L(n.label))}</a>`).join("");
+  $("#footPages").innerHTML = SITE.nav.map(n => `<li><a href="/${esc(n.route)}">${esc(L(n.label))}</a></li>`).join("");
   $("#footSocial").innerHTML = SITE.social.map(s => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join("");
   $("#footLocation").innerHTML = L(SITE.location).map(esc).join("<br>");
   $("#hLocation").textContent = T("location");
@@ -798,7 +936,7 @@ function drawFooterPattern(){
   const blocks = [...foot.querySelectorAll(".foot-cols > div, .copy")];
   blocks.forEach(el => el.style.transform = "");
   const W = foot.clientWidth, H = foot.clientHeight;
-  const P = W < 600 ? 12 : 14, k = P / 40.47, d = 19.6 * k, sw = 8.4 * k, o = 4.2 * k;
+  const P = W < 600 ? 9.6 : 11.2, k = P / 40.47, d = 19.6 * k, sw = 8.4 * k, o = 4.2 * k;
   const fr = foot.getBoundingClientRect(), gap = P * 0.9;
   // grid centred in the footer so the outer margins are even
   const ox = (W - (Math.floor((W - 2 * o) / P) * P + d)) / 2 - o, oy = (H - (Math.floor((H - 2 * o) / P) * P + d)) / 2 - o;
@@ -839,9 +977,84 @@ function drawFooterPattern(){
 if (window.ResizeObserver) new ResizeObserver(drawFooterPattern).observe(document.querySelector(".site-footer"));
 document.fonts && document.fonts.ready.then(drawFooterPattern);
 
+/* Intro: the logo is drawn at the pattern's scale and placed on its grid, so its dashes
+   continue the pattern in a darker colour */
+function drawIntro(){
+  const box = $("#intro"), svg = $("#introPattern"), mark = $("#introMark");
+  const W = box.clientWidth, H = box.clientHeight;
+  // same size as the large logo on the home page: clamp(96px, 12vw, 168px)
+  const S = Math.min(168, Math.max(96, innerWidth * 0.12)), k = S / 635, P = 40.47 * k;
+  const d = 19.6 * k, sw = 8.4 * k, o = 4.2 * k;
+  const Lx = (W - S) / 2, Ly = (H - S) / 2;
+  const ox = Lx - Math.ceil(Lx / P) * P, oy = Ly - Math.ceil(Ly / P) * P;
+  const c0 = Math.round((Lx - ox) / P), r0 = Math.round((Ly - oy) / P);
+  const cols = Math.ceil((W - ox) / P) + 1, rows = Math.ceil((H - oy) / P) + 1;
+  let path = "";
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    if (c >= c0 && c < c0 + 16 && r >= r0 && r < r0 + 16) continue;
+    const x = ox + c * P + o, y = oy + r * P + o;
+    if (x < 0 || y < 0 || x + d > W || y + d > H) continue;
+    path += `M${x.toFixed(1)} ${(y + d).toFixed(1)}l${d.toFixed(1)}-${d.toFixed(1)}`;
+  }
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = `<path d="${path}" fill="none" stroke="currentColor" stroke-width="${sw.toFixed(2)}" stroke-linecap="round"/>`;
+  if (!mark.firstChild) mark.innerHTML = LOGO;
+  Object.assign(mark.style, { left: `${ox + c0 * P}px`, top: `${oy + r0 * P}px`, width: `${S}px`, height: `${S}px` });
+}
+function runIntro(){
+  const root = document.documentElement, box = $("#intro");
+  if (!root.classList.contains("intro")) { box.remove(); return; }
+  store.set("sko-intro", "1");
+  drawIntro();
+  addEventListener("resize", drawIntro);
+  requestAnimationFrame(() => requestAnimationFrame(() => box.classList.add("show")));
+  let done = false;
+  const end = () => {
+    if (done) return; done = true;
+    box.classList.add("out");
+    setTimeout(() => { root.classList.remove("intro"); box.remove(); removeEventListener("resize", drawIntro); }, 400);
+  };
+  const timer = setTimeout(end, 1600);   // 0.4 s fade in + 1.2 s hold + 0.4 s fade out = 2 s
+  box.addEventListener("click", () => { clearTimeout(timer); end(); });
+  addEventListener("keydown", () => { clearTimeout(timer); end(); }, { once: true });
+}
+
+/* ============================ routing ============================
+   Every page has its own address (sko.one/about, sko.one/project/fluxveil).
+   Clicks on links inside the site switch pages without reloading. */
+const routePath = () => location.pathname.replace(/\.html$/, "").replace(/\/index$/, "").replace(/^\/+|\/+$/g, "");
+
+// Old links in the form sko.one/#/project/fluxveil/architecture keep working
+if (location.hash.startsWith("#/")) {
+  const [pg = "", a = "", c = ""] = location.hash.slice(2).split("/");
+  history.replaceState(null, "", "/" + [pg, a].filter(Boolean).join("/") + (c ? "?in=" + c : ""));
+}
+
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[href]");
+  if (!a || a.target || a.hasAttribute("download") || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const u = new URL(a.href, location.href);
+  if (u.origin !== location.origin) return;
+  e.preventDefault();
+  if (u.pathname + u.search !== location.pathname + location.search) history.pushState(null, "", u.pathname + u.search);
+  render();
+});
+window.addEventListener("popstate", () => render());
+
+/* Keep the <head> (title, description, share tags, structured data) in step with the page */
+function applySeo(){
+  const nodes = [...document.head.childNodes];
+  const a = nodes.findIndex(n => n.nodeType === 8 && n.data.trim() === "SEO");
+  const b = nodes.findIndex(n => n.nodeType === 8 && n.data.trim() === "/SEO");
+  if (a < 0 || b < a) return;
+  nodes.slice(a + 1, b).forEach(n => n.remove());
+  const range = document.createRange(); range.selectNode(document.head);
+  document.head.insertBefore(range.createContextualFragment(seoHead(seoFor(location.pathname, lang))), nodes[b]);
+}
+
 chrome();
-window.addEventListener("hashchange", () => render());
 render();
+runIntro();
 </script>
 </body>
 </html>
