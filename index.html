@@ -301,12 +301,13 @@ const SITE = {
     "Graphic Design": { en: "Graphic Design", bg: "Графичен дизайн" },
     "Web Design":     { en: "Web Design",     bg: "Уеб дизайн" },
     "Product Design": { en: "Product Design", bg: "Продуктов дизайн" },
-    "Landscape":      { en: "Landscape",      bg: "Ландшафт" }
+    "Landscape":      { en: "Landscape",      bg: "Ландшафт" },
+    "Interior Design": { en: "Interior Design", bg: "Интериорен дизайн" }
   },
 
   // Which categories each section page shows (filters appear only for categories that have projects)
   sections: {
-    "architecture":   ["Architecture", "Landscape"],
+    "architecture":   ["Architecture", "Interior Design", "Landscape"],
     "design":         ["Graphic Design", "Web Design", "Product Design"]
   },
 
@@ -349,6 +350,22 @@ const SITE = {
   // Projects appear on the home page in this order (top = first).
   // description: { en: [paragraphs], bg: [paragraphs] }
   projects: [
+    { slug: "fluxveil",       title: "FluxVeil",       categories: ["Architecture", "Interior Design"], year: "2026", location: { en: "Sofia", bg: "София" }, cover: "",
+      thumb: "images/fluxveil/thumb.jpg",
+      description: {en:[],bg:[]},
+      gallery: [
+        "images/fluxveil/01.jpg",
+        "images/fluxveil/02.jpg",
+        "images/fluxveil/03.jpg",
+        "images/fluxveil/04.jpg",
+        "images/fluxveil/05.jpg",
+        "images/fluxveil/06.jpg",
+        "images/fluxveil/07.jpg",
+        "images/fluxveil/08.jpg",
+        "images/fluxveil/09.jpg",
+        "images/fluxveil/10.jpg",
+        "images/fluxveil/11.jpg"
+      ] },
     { slug: "sko-office",     title: "SKO Office",     categories: ["Architecture"],                   year: "", location: "",
       thumb: "images/sko-office/thumb.jpg",
       cover: "images/sko-office/cover.jpg",
